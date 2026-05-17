@@ -22,6 +22,8 @@
   --color-mist-500: oklch(55% 0.10 210);
   --color-mist-600: oklch(47% 0.09 210);
   --color-mist-700: oklch(39% 0.08 210);
+  --color-mist-800: oklch(32% 0.07 210);
+  --color-mist-900: oklch(25% 0.05 210);
 
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
