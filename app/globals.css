@@ -33,6 +33,16 @@
 }
 
 @layer base {
+  :root {
+    --background: oklch(99% 0.005 80);
+    --foreground: oklch(15% 0.02 270);
+    --card: oklch(100% 0 0);
+    --card-foreground: oklch(15% 0.02 270);
+    --muted: oklch(96% 0.005 80);
+    --muted-foreground: oklch(50% 0.01 270);
+    --border: oklch(91% 0.005 80);
+  }
+
   *, *::before, *::after {
     border-color: var(--color-zinc-200);
     box-sizing: border-box;
