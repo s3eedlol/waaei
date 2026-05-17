@@ -194,10 +194,10 @@ export function TestEngine({ config }: { config: TestConfig }) {
         </div>
       </div>
 
-      {/* Affiliate link for higher severity */}
-      {(scoreRange.severity === "severe" || scoreRange.severity === "moderateHigh") && (
+      {/* Affiliate link — only shown when configured and severity warrants it */}
+      {config.affiliateUrl && (scoreRange.severity === "severe" || scoreRange.severity === "moderateHigh") && (
         <a
-          href="https://www.arabtherapy.com"
+          href={config.affiliateUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full text-center py-4 px-6 rounded-2xl text-white font-semibold text-base transition-colors"
@@ -205,7 +205,7 @@ export function TestEngine({ config }: { config: TestConfig }) {
           onMouseOver={(e) => (e.currentTarget.style.background = "oklch(55% 0.10 210)")}
           onMouseOut={(e) => (e.currentTarget.style.background = "oklch(62% 0.10 210)")}
         >
-          تحدث مع معالج نفسي عبر الإنترنت
+          {config.affiliateCta ?? "تحدث مع معالج نفسي عبر الإنترنت"}
         </a>
       )}
 

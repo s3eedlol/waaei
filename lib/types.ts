@@ -32,4 +32,6 @@ export interface TestConfig {
   disclaimer: string;
   category: "mood" | "anxiety" | "work" | "stress" | "ocd";
   icon: string; // emoji used on cards
+  affiliateUrl?: string;
+  affiliateCta?: string;
 }
