@@ -1,4 +1,6 @@
 @import "tailwindcss";
+@source "../lib/**/*.ts";
+@source "../components/**/*.tsx";
 
 @theme {
   --font-cairo: var(--font-cairo-var);
