@@ -1,6 +1,6 @@
 import { TestConfig } from "../types";
 
-export const sasSvConfig: TestConfig = {
+export const sassvConfig: TestConfig = {
   id: "sassv",
   slug: "اختبار-إدمان-الهاتف",
   name: "اختبار إدمان الهاتف",

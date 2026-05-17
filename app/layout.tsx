@@ -11,8 +11,8 @@ const cairo = Cairo({
 
 export const metadata: Metadata = {
   title: {
-    default: "نفسي | اختبارات الصحة النفسية",
-    template: "%s | نفسي",
+    default: "واعي | اختبارات الصحة النفسية",
+    template: "%s | واعي",
   },
   description:
     "اختبارات نفسية مجانية وسرية للتعرف على مستوى صحتك النفسية. اختبار الاكتئاب، القلق، الإرهاق الوظيفي والمزيد — بالعربية.",
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     "GAD-7 عربي",
   ],
   openGraph: {
-    siteName: "نفسي",
+    siteName: "واعي",
     locale: "ar_SA",
     type: "website",
   },

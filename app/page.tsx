@@ -7,14 +7,45 @@ import { gad7Config } from "@/lib/tests/gad7";
 import { burnoutConfig } from "@/lib/tests/burnout";
 import { pssConfig } from "@/lib/tests/pss";
 import { ocirConfig } from "@/lib/tests/ocir";
+import { asrs5Config } from "@/lib/tests/asrs5";
+import { pcl5Config } from "@/lib/tests/pcl5";
+import { isiConfig } from "@/lib/tests/isi";
+import { rsesConfig } from "@/lib/tests/rses";
+import { spinConfig } from "@/lib/tests/spin";
+import { bfi10Config } from "@/lib/tests/bfi10";
+import { ecrsConfig } from "@/lib/tests/ecrs";
+import { sassvConfig } from "@/lib/tests/sassv";
+import { beis10Config } from "@/lib/tests/beis10";
+import { uls8Config } from "@/lib/tests/uls8";
+import { staxiConfig } from "@/lib/tests/staxi";
+import { eat7Config } from "@/lib/tests/eat7";
+import { mdqConfig } from "@/lib/tests/mdq";
+import { dass21Config } from "@/lib/tests/dass21";
+import { bpniConfig } from "@/lib/tests/bpni";
+import { psqiConfig } from "@/lib/tests/psqi";
+import { ptgiConfig } from "@/lib/tests/ptgi";
+import { auditcConfig } from "@/lib/tests/auditc";
+import { TestConfig } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية",
+  title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
   description:
-    "اختبر صحتك النفسية بشكل مجاني وسري. اختبارات الاكتئاب والقلق والإرهاق الوظيفي والتوتر — مبنية على مقاييس علمية مُتحقَّق منها.",
+    "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
 };
 
-const allTests = [phq9Config, gad7Config, pssConfig, burnoutConfig, ocirConfig];
+const moodTests: TestConfig[] = [phq9Config, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig];
+const anxietyTests: TestConfig[] = [gad7Config, spinConfig, pcl5Config, ocirConfig];
+const stressTests: TestConfig[] = [pssConfig, burnoutConfig, isiConfig, asrs5Config, sassvConfig];
+const personalityTests: TestConfig[] = [bfi10Config, ecrsConfig, uls8Config, bpniConfig];
+
+type Section = { title: string; tests: TestConfig[] };
+
+const sections: Section[] = [
+  { title: "الاكتئاب والمزاج", tests: moodTests },
+  { title: "القلق والخوف", tests: anxietyTests },
+  { title: "التوتر والإرهاق", tests: stressTests },
+  { title: "الشخصية والعلاقات", tests: personalityTests },
+];
 
 export default function HomePage() {
   return (
@@ -30,7 +61,7 @@ export default function HomePage() {
               <span className="text-sage-500"> اليوم؟</span>
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed">
-              اختبارات علمية مجانية وسرية تماماً — بدون تسجيل، بدون حفظ بيانات.
+              23 اختباراً علمياً مجانياً وسرياً تماماً — بدون تسجيل، بدون حفظ بيانات.
               فهم ما تشعر به هو الخطوة الأولى.
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
@@ -47,20 +78,26 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Tests grid */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold mb-8 text-foreground">اختر الاختبار</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {allTests.map((config) => (
-              <TestCard key={config.id} config={config} />
-            ))}
-          </div>
-        </section>
+        {/* Tests by category */}
+        <div className="max-w-6xl mx-auto px-4 py-12 flex flex-col gap-14">
+          {sections.map((section) => (
+            <section key={section.title}>
+              <h2 className="text-xl font-bold mb-6 text-foreground border-r-4 pr-3" style={{ borderColor: "oklch(62% 0.12 145)" }}>
+                {section.title}
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {section.tests.map((config) => (
+                  <TestCard key={config.id} config={config} />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
 
         {/* Trust section */}
         <section className="bg-muted py-12 px-4">
           <div className="max-w-3xl mx-auto text-center flex flex-col gap-6">
-            <h2 className="text-2xl font-bold">لماذا نفسي؟</h2>
+            <h2 className="text-2xl font-bold">لماذا واعي؟</h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 text-sm">
               <div className="flex flex-col gap-2">
                 <span className="text-3xl">🔬</span>

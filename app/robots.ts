@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://nafsi.me/sitemap.xml",
+    sitemap: "https://waaei.me/sitemap.xml",
   };
 }
