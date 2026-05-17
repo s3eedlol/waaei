@@ -17,7 +17,7 @@ export function TestEngine({ config }: { config: TestConfig }) {
 
   const question = config.questions[currentIndex];
   const totalQuestions = config.questions.length;
-  const progress = (currentIndex / totalQuestions) * 100;
+  const progress = ((currentIndex + 1) / totalQuestions) * 100;
   const isLast = currentIndex === totalQuestions - 1;
   const maxValue = config.answerOptions.length - 1;
 
@@ -112,6 +112,8 @@ export function TestEngine({ config }: { config: TestConfig }) {
           {config.answerOptions.map((option) => (
             <button
               key={option.value}
+              type="button"
+              aria-pressed={selected === option.value}
               onClick={() => handleAnswer(option.value)}
               className={cn(
                 "w-full text-right px-5 py-4 rounded-2xl border-2 transition-all duration-150 text-base font-medium",
