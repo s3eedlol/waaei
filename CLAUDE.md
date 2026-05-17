@@ -16,6 +16,7 @@
 - Cairo Google Font (Arabic + Latin subsets)
 - `dir="rtl"` on `<html>`, RTL layout throughout
 - Vitest + @testing-library/react for unit tests
+- `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
 
 ## Critical architecture decisions
 
