@@ -18,7 +18,7 @@
 - Vitest + @testing-library/react for unit tests
 - `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
 - `app/icon.png` — custom واعي app icon (dark green rounded square); Next.js App Router picks it up automatically as the favicon. Source file in `logo/`.
-- `public/logo.png` — header wordmark logo (واعي calligraphic, white background). Displayed in `components/Header.tsx` via `<Image>` at 200×122px. Source: `logo/09 _ _ Tail Horizon (2.png`.
+- Header logo is **code-generated** in `components/Header.tsx` via a `LogoMark` component — no image file. Renders "واعي" in bold Cairo font with the "و" in sage-500 green (`oklch(55% 0.12 145)`) and "اعي" in dark green (`oklch(25% 0.06 145)`), inside a dark green outlined rounded border.
 
 ## Critical architecture decisions
 
