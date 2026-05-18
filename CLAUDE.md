@@ -17,6 +17,7 @@
 - `dir="rtl"` on `<html>`, RTL layout throughout
 - Vitest + @testing-library/react for unit tests
 - `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
+- `app/icon.png` — custom واعي app icon (dark green rounded square); Next.js App Router picks it up automatically as the favicon. Source file in `logo/`.
 
 ## Critical architecture decisions
 
