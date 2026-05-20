@@ -8,7 +8,14 @@ export function Footer() {
           لا تُحفظ أي بيانات شخصية. إذا كنت تمر بأزمة، يرجى التواصل مع متخصص.
         </p>
         <p className="text-xs text-muted-foreground">
-          © {new Date().getFullYear()} واعي — جميع الحقوق محفوظة
+          © {new Date().getFullYear()}{" "}
+          <a href="https://emdash.ae" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            Emdash
+          </a>
+          {" · "}
+          <a href="https://emdash.ae" target="_blank" rel="noopener noreferrer" className="hover:underline">
+            emdash.ae
+          </a>
         </p>
       </div>
     </footer>

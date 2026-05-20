@@ -32,6 +32,20 @@ export const metadata: Metadata = {
   },
 };
 
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "واعي",
+  url: "https://waaei.me",
+  email: "contact@emdash.ae",
+  parentOrganization: {
+    "@type": "Organization",
+    name: "Emdash",
+    url: "https://emdash.ae",
+    email: "contact@emdash.ae",
+  },
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -40,9 +54,13 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={`${cairo.variable} antialiased`}>
-          {children}
-          <Analytics />
-        </body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
+        />
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
