@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TestEngine } from "@/components/TestEngine";
+import { AboutPage } from "@/components/AboutPage";
 import { phq9Config } from "@/lib/tests/phq9";
 import { gad7Config } from "@/lib/tests/gad7";
 import { burnoutConfig } from "@/lib/tests/burnout";
@@ -179,6 +180,12 @@ type Props = { params: Promise<{ test: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { test } = await params;
   const slug = decodeURIComponent(test);
+  if (slug === "عن-الموقع") {
+    return {
+      title: "واعي | عن الموقع",
+      description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
+    };
+  }
   const meta = metaBySlug[slug];
   if (!meta) return {};
   return { title: meta.title, description: meta.description, keywords: meta.keywords };
@@ -187,8 +194,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function TestPage({ params }: Props) {
   const { test } = await params;
   const slug = decodeURIComponent(test);
-  const config = testsBySlug[slug];
 
+  if (slug === "عن-الموقع") {
+    return <AboutPage />;
+  }
+
+  const config = testsBySlug[slug];
   if (!config) notFound();
 
   return (
