@@ -5,6 +5,8 @@
 ## What this is
 23 free, anonymous, Arabic-language mental health self-assessment tests targeting GCC + Egypt. Brand name: **واعي** (waaei = "aware"). Domain: **waaei.me**. Zero stigma framing.
 
+**Operator:** Emdash — UAE company, DED Abu Dhabi licence. Contact: contact@emdash.ae · https://emdash.ae
+
 ## Deployment
 - **GitHub:** https://github.com/s3eedlol/waaei
 - **Vercel:** https://waaei.vercel.app (auto-deploys on push to `master`)
@@ -19,14 +21,20 @@
 - `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
 - `app/icon.png` — custom واعي app icon (dark green rounded square); Next.js App Router picks it up automatically as the favicon. Source file in `logo/`.
 - Header logo is **code-generated** in `components/Header.tsx` via a `LogoMark` component — no image file. Renders "واعي" in bold Cairo font with the "و" in sage-500 green (`oklch(55% 0.12 145)`) and "اعي" in dark green (`oklch(25% 0.06 145)`), inside a dark green outlined rounded border.
+- `app/layout.tsx` includes a global Organization JSON-LD `<script>` (واعي → parentOrg Emdash) via `dangerouslySetInnerHTML`.
+- `components/AboutPage.tsx` — about page component served at `/عن-الموقع` via the `[test]` dynamic route. Has its own Emdash+واعي Organization JSON-LD.
 
 ## Critical architecture decisions
 
 ### Tailwind v4 — never use class strings in data files
 Tailwind v4 scans source files for class names. Classes in `lib/tests/*.ts` string literals get purged unless listed in `@source` directives. **All colors in `TestEngine.tsx` use raw `oklch()` values in `style={{ }}` attributes** — never Tailwind classes for dynamic/conditional colors.
 
-### Arabic URL routing on Windows
-Next.js App Router on Windows cannot match Unicode Arabic folder names to URL requests. **Never create Arabic-named app directories.** All 23 tests are served from a single `app/[test]/page.tsx` dynamic route using a `testsBySlug` lookup map with `decodeURIComponent(params.test)`.
+### Arabic URL routing — never create Arabic-named app directories
+Arabic-named directories under `app/` break the build in two ways:
+- **Windows dev:** Next.js cannot match Unicode folder names to incoming URL requests (runtime 404).
+- **Production SSG:** Next.js throws `InvalidCharacterError: Invalid character` (code 5) during static page generation on any platform — build fails.
+
+**All pages with Arabic URLs** (tests + the about page) are served from a single `app/[test]/page.tsx` dynamic route using a `testsBySlug` lookup map with `decodeURIComponent(params.test)`. Non-test pages like the about page add a named slug check (`slug === "عن-الموقع"`) and render a dedicated component.
 
 ### TestEngine uses zero shadcn/third-party components
 `components/TestEngine.tsx` is pure HTML + inline styles. Progress bar is a plain `<div>` with `width: ${pct}%`. Answer buttons use `aria-pressed` and inline `style` for selected state. This avoids shadcn base-nova component quirks and Tailwind purging.
@@ -39,6 +47,13 @@ Next.js App Router on Windows cannot match Unicode Arabic folder names to URL re
 2. Add slug → config mapping in `app/[test]/page.tsx` (`testsBySlug` and `metaBySlug`)
 3. Add config to the relevant category array in `app/page.tsx`
 4. Add slug to `app/sitemap.ts`
+
+## Adding a new non-test page (e.g. about, privacy)
+1. Create the page as a component in `components/` (e.g. `components/MyPage.tsx`)
+2. Import it in `app/[test]/page.tsx` and add a slug check (e.g. `if (slug === "اسم-الصفحة") return <MyPage />;`)
+3. Add metadata for the slug in `generateMetadata` in `app/[test]/page.tsx`
+4. Add the URL to `app/sitemap.ts`
+**Never create Arabic-named directories under `app/` — see routing constraint above.**
 
 ## Test inventory (23 total)
 | File | Scale | Slug |
