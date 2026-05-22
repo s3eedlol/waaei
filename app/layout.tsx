@@ -11,6 +11,7 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://waaei.me"),
   title: {
     default: "واعي | اختبارات الصحة النفسية",
     template: "%s | واعي",
@@ -29,6 +30,9 @@ export const metadata: Metadata = {
     siteName: "واعي",
     locale: "ar_SA",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
   },
 };
 

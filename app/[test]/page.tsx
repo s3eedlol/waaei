@@ -4,6 +4,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TestEngine } from "@/components/TestEngine";
 import { AboutPage } from "@/components/AboutPage";
+import { PrivacyPage } from "@/components/PrivacyPage";
 import { phq9Config } from "@/lib/tests/phq9";
 import { gad7Config } from "@/lib/tests/gad7";
 import { burnoutConfig } from "@/lib/tests/burnout";
@@ -175,6 +176,141 @@ const metaBySlug: Record<string, { title: string; description: string; keywords:
   },
 };
 
+type MedicalCondition = { "@type": "MedicalCondition"; name: string; alternateName: string };
+
+const conditionBySlug: Record<string, MedicalCondition> = {
+  "اختبار-الاكتئاب":              { "@type": "MedicalCondition", name: "Depression",                          alternateName: "الاكتئاب" },
+  "اختبار-القلق":                  { "@type": "MedicalCondition", name: "Generalized Anxiety Disorder",        alternateName: "اضطراب القلق العام" },
+  "اختبار-الإرهاق-الوظيفي":        { "@type": "MedicalCondition", name: "Occupational Burnout",               alternateName: "الإرهاق الوظيفي" },
+  "اختبار-التوتر":                 { "@type": "MedicalCondition", name: "Psychological Stress",                alternateName: "التوتر النفسي" },
+  "اختبار-الوسواس-القهري":          { "@type": "MedicalCondition", name: "Obsessive-Compulsive Disorder",      alternateName: "الوسواس القهري" },
+  "اختبار-ADHD-للبالغين":           { "@type": "MedicalCondition", name: "Attention Deficit Hyperactivity Disorder", alternateName: "اضطراب نقص الانتباه وفرط الحركة" },
+  "اختبار-الصدمة-النفسية":          { "@type": "MedicalCondition", name: "Post-Traumatic Stress Disorder",    alternateName: "اضطراب ما بعد الصدمة" },
+  "اختبار-الأرق":                  { "@type": "MedicalCondition", name: "Insomnia",                           alternateName: "الأرق" },
+  "اختبار-تقدير-الذات":             { "@type": "MedicalCondition", name: "Low Self-Esteem",                   alternateName: "ضعف تقدير الذات" },
+  "اختبار-الرهاب-الاجتماعي":        { "@type": "MedicalCondition", name: "Social Anxiety Disorder",           alternateName: "الرهاب الاجتماعي" },
+  "اختبار-الشخصية-الخمسة":          { "@type": "MedicalCondition", name: "Personality Assessment",            alternateName: "تقييم الشخصية" },
+  "اختبار-نمط-التعلق-العاطفي":      { "@type": "MedicalCondition", name: "Attachment Disorder",               alternateName: "اضطراب التعلق العاطفي" },
+  "اختبار-إدمان-الهاتف":            { "@type": "MedicalCondition", name: "Smartphone Addiction",              alternateName: "إدمان الهاتف الذكي" },
+  "اختبار-الذكاء-العاطفي":          { "@type": "MedicalCondition", name: "Emotional Intelligence",            alternateName: "الذكاء العاطفي" },
+  "اختبار-الوحدة-النفسية":          { "@type": "MedicalCondition", name: "Loneliness",                        alternateName: "الوحدة النفسية" },
+  "اختبار-الغضب":                  { "@type": "MedicalCondition", name: "Anger Disorder",                    alternateName: "اضطراب الغضب" },
+  "اختبار-اضطراب-الأكل":            { "@type": "MedicalCondition", name: "Eating Disorder",                   alternateName: "اضطراب الأكل" },
+  "اختبار-ثنائي-القطب":             { "@type": "MedicalCondition", name: "Bipolar Disorder",                  alternateName: "اضطراب ثنائي القطب" },
+  "اختبار-الاكتئاب-والقلق-والتوتر": { "@type": "MedicalCondition", name: "Depression, Anxiety and Stress",   alternateName: "الاكتئاب والقلق والتوتر" },
+  "اختبار-الشخصية-النرجسية":        { "@type": "MedicalCondition", name: "Narcissistic Personality Disorder", alternateName: "اضطراب الشخصية النرجسية" },
+  "اختبار-جودة-النوم":              { "@type": "MedicalCondition", name: "Sleep Disorder",                    alternateName: "اضطراب النوم" },
+  "اختبار-النمو-بعد-الصدمة":        { "@type": "MedicalCondition", name: "Post-Traumatic Growth",            alternateName: "النمو بعد الصدمة" },
+  "اختبار-أنماط-الاستهلاك":         { "@type": "MedicalCondition", name: "Alcohol Use Disorder",             alternateName: "اضطراب استخدام الكحول" },
+};
+
+type ScaleSource = { scale: string; authors: string; url: string };
+
+const sourceBySlug: Record<string, ScaleSource> = {
+  "اختبار-الاكتئاب":              { scale: "PHQ-9 (Patient Health Questionnaire)",              authors: "Kroenke & Spitzer, 2001",                      url: "https://pubmed.ncbi.nlm.nih.gov/11556941/" },
+  "اختبار-القلق":                  { scale: "GAD-7 (Generalized Anxiety Disorder Scale)",         authors: "Spitzer et al., 2006",                         url: "https://pubmed.ncbi.nlm.nih.gov/16717171/" },
+  "اختبار-الإرهاق-الوظيفي":        { scale: "ICD-11 Occupational Burnout",                       authors: "منظمة الصحة العالمية (WHO), 2019",              url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases" },
+  "اختبار-التوتر":                 { scale: "PSS-10 (Perceived Stress Scale)",                   authors: "Cohen et al., 1983",                           url: "https://pubmed.ncbi.nlm.nih.gov/6668417/" },
+  "اختبار-الوسواس-القهري":          { scale: "OCI-R (Obsessive Compulsive Inventory-Revised)",    authors: "Foa et al., 2002",                             url: "https://pubmed.ncbi.nlm.nih.gov/12501574/" },
+  "اختبار-ADHD-للبالغين":           { scale: "ASRS-5 (Adult ADHD Self-Report Scale)",             authors: "Kessler et al., 2005 — منظمة الصحة العالمية",  url: "https://pubmed.ncbi.nlm.nih.gov/15841682/" },
+  "اختبار-الصدمة-النفسية":          { scale: "PCL-5 (PTSD Checklist for DSM-5)",                  authors: "Weathers et al. — U.S. Dept. of Veterans Affairs", url: "https://www.ptsd.va.gov/professional/assessment/adult-sr/ptsd-checklist.asp" },
+  "اختبار-الأرق":                  { scale: "ISI (Insomnia Severity Index)",                     authors: "Bastien et al., 2001",                         url: "https://pubmed.ncbi.nlm.nih.gov/11438246/" },
+  "اختبار-تقدير-الذات":             { scale: "RSES (Rosenberg Self-Esteem Scale)",                authors: "Rosenberg, 1965",                              url: "https://pubmed.ncbi.nlm.nih.gov/15769175/" },
+  "اختبار-الرهاب-الاجتماعي":        { scale: "SPIN (Social Phobia Inventory)",                   authors: "Connor et al., 2000",                          url: "https://pubmed.ncbi.nlm.nih.gov/10827888/" },
+  "اختبار-الشخصية-الخمسة":          { scale: "BFI-10 (Big Five Inventory)",                      authors: "Rammstedt & John, 2007",                       url: "https://doi.org/10.1016/j.jrp.2006.02.001" },
+  "اختبار-نمط-التعلق-العاطفي":      { scale: "ECR-S (Experiences in Close Relationships–Short Form)", authors: "Wei et al., 2007",                        url: "https://pubmed.ncbi.nlm.nih.gov/17437384/" },
+  "اختبار-إدمان-الهاتف":            { scale: "SAS-SV (Smartphone Addiction Scale–Short Version)", authors: "Kwon et al., 2013",                           url: "https://pubmed.ncbi.nlm.nih.gov/24391787/" },
+  "اختبار-الذكاء-العاطفي":          { scale: "BEIS-10 (Brief Emotional Intelligence Scale)",      authors: "Davies et al., 2010",                          url: "https://doi.org/10.1027/1614-0001/a000028" },
+  "اختبار-الوحدة-النفسية":          { scale: "ULS-8 (UCLA Loneliness Scale–Short Form)",          authors: "Hays & DiMatteo, 1987",                        url: "https://pubmed.ncbi.nlm.nih.gov/3572703/" },
+  "اختبار-الغضب":                  { scale: "STAXI-2 (State-Trait Anger Expression Inventory)",  authors: "Spielberger, 1999",                            url: "https://www.parinc.com/Products/Pkey/378" },
+  "اختبار-اضطراب-الأكل":            { scale: "EAT-7 (Eating Attitudes Test)",                    authors: "Garner & Garfinkel, 1982",                     url: "https://pubmed.ncbi.nlm.nih.gov/6720619/" },
+  "اختبار-ثنائي-القطب":             { scale: "MDQ (Mood Disorder Questionnaire)",                authors: "Hirschfeld et al., 2000",                      url: "https://pubmed.ncbi.nlm.nih.gov/11058490/" },
+  "اختبار-الاكتئاب-والقلق-والتوتر": { scale: "DASS-21 (Depression Anxiety Stress Scales)",       authors: "Lovibond & Lovibond, 1995",                    url: "https://www2.psy.unsw.edu.au/dass/" },
+  "اختبار-الشخصية-النرجسية":        { scale: "PNI-16 (Pathological Narcissism Inventory)",       authors: "Pincus et al., 2009",                          url: "https://pubmed.ncbi.nlm.nih.gov/19719348/" },
+  "اختبار-جودة-النوم":              { scale: "PSQI (Pittsburgh Sleep Quality Index)",             authors: "Buysse et al., 1989",                          url: "https://pubmed.ncbi.nlm.nih.gov/2748771/" },
+  "اختبار-النمو-بعد-الصدمة":        { scale: "PTGI-SF (Post-Traumatic Growth Inventory–Short Form)", authors: "Cann et al., 2010",                       url: "https://pubmed.ncbi.nlm.nih.gov/19582640/" },
+  "اختبار-أنماط-الاستهلاك":         { scale: "AUDIT-C (Alcohol Use Disorders Identification Test)", authors: "Bush et al., 1998",                        url: "https://pubmed.ncbi.nlm.nih.gov/9738608/" },
+};
+
+const relatedBySlug: Record<string, string[]> = {
+  "اختبار-الاكتئاب":              ["اختبار-القلق", "اختبار-التوتر", "اختبار-تقدير-الذات"],
+  "اختبار-القلق":                  ["اختبار-الاكتئاب", "اختبار-الرهاب-الاجتماعي", "اختبار-الصدمة-النفسية"],
+  "اختبار-الإرهاق-الوظيفي":        ["اختبار-التوتر", "اختبار-ADHD-للبالغين", "اختبار-جودة-النوم"],
+  "اختبار-التوتر":                 ["اختبار-الإرهاق-الوظيفي", "اختبار-الاكتئاب", "اختبار-القلق"],
+  "اختبار-الوسواس-القهري":          ["اختبار-القلق", "اختبار-الاكتئاب", "اختبار-ADHD-للبالغين"],
+  "اختبار-ADHD-للبالغين":           ["اختبار-الإرهاق-الوظيفي", "اختبار-التوتر", "اختبار-جودة-النوم"],
+  "اختبار-الصدمة-النفسية":          ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-النمو-بعد-الصدمة"],
+  "اختبار-الأرق":                  ["اختبار-جودة-النوم", "اختبار-التوتر", "اختبار-الإرهاق-الوظيفي"],
+  "اختبار-تقدير-الذات":             ["اختبار-الاكتئاب", "اختبار-الوحدة-النفسية", "اختبار-الشخصية-النرجسية"],
+  "اختبار-الرهاب-الاجتماعي":        ["اختبار-القلق", "اختبار-الوحدة-النفسية", "اختبار-تقدير-الذات"],
+  "اختبار-الشخصية-الخمسة":          ["اختبار-نمط-التعلق-العاطفي", "اختبار-الذكاء-العاطفي", "اختبار-الشخصية-النرجسية"],
+  "اختبار-نمط-التعلق-العاطفي":      ["اختبار-الشخصية-الخمسة", "اختبار-الوحدة-النفسية", "اختبار-الرهاب-الاجتماعي"],
+  "اختبار-إدمان-الهاتف":            ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الوحدة-النفسية"],
+  "اختبار-الذكاء-العاطفي":          ["اختبار-الشخصية-الخمسة", "اختبار-نمط-التعلق-العاطفي", "اختبار-الغضب"],
+  "اختبار-الوحدة-النفسية":          ["اختبار-تقدير-الذات", "اختبار-الاكتئاب", "اختبار-الرهاب-الاجتماعي"],
+  "اختبار-الغضب":                  ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الصدمة-النفسية"],
+  "اختبار-اضطراب-الأكل":            ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-تقدير-الذات"],
+  "اختبار-ثنائي-القطب":             ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-الاكتئاب-والقلق-والتوتر"],
+  "اختبار-الاكتئاب-والقلق-والتوتر": ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-التوتر"],
+  "اختبار-الشخصية-النرجسية":        ["اختبار-الشخصية-الخمسة", "اختبار-نمط-التعلق-العاطفي", "اختبار-تقدير-الذات"],
+  "اختبار-جودة-النوم":              ["اختبار-الأرق", "اختبار-التوتر", "اختبار-الإرهاق-الوظيفي"],
+  "اختبار-النمو-بعد-الصدمة":        ["اختبار-الصدمة-النفسية", "اختبار-الاكتئاب", "اختبار-تقدير-الذات"],
+  "اختبار-أنماط-الاستهلاك":         ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الاكتئاب"],
+};
+
+function buildTestSchema(slug: string, meta: { title: string; description: string }) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "MedicalWebPage",
+    name: meta.title,
+    description: meta.description,
+    url: `https://waaei.me/${slug}`,
+    inLanguage: "ar",
+    about: conditionBySlug[slug],
+    audience: { "@type": "MedicalAudience", audienceType: "Patient" },
+    publisher: { "@type": "Organization", name: "واعي", url: "https://waaei.me" },
+  };
+}
+
+function buildFAQItems(config: TestConfig) {
+  const firstRange = config.scoreRanges[0]?.label ?? "منخفضة";
+  const lastRange = config.scoreRanges[config.scoreRanges.length - 1]?.label ?? "مرتفعة";
+  return [
+    {
+      q: `ما هو ${config.name}؟`,
+      a: config.longDescription,
+    },
+    {
+      q: `كم يستغرق ${config.name}؟`,
+      a: `يستغرق الاختبار ${config.estimatedMinutes} دقائق تقريباً ويتضمن ${config.questions.length} سؤالاً.`,
+    },
+    {
+      q: "هل هذا الاختبار تشخيص طبي؟",
+      a: "لا، الاختبار أداة للتوعية الذاتية فقط ولا يُعدّ تشخيصاً طبياً أو بديلاً عن استشارة متخصص. إذا كنت قلقاً على صحتك النفسية، يُنصح بالتحدث مع طبيب أو معالج نفسي.",
+    },
+    {
+      q: "هل نتائجي سرية؟",
+      a: "نعم، الاختبار سري تماماً. لا تُحفظ أي بيانات على خوادمنا ولا نطلب أي تسجيل أو بريد إلكتروني. نتائجك تبقى في متصفحك فقط.",
+    },
+    {
+      q: "كيف أفسّر نتيجتي؟",
+      a: `تتراوح الدرجات بين "${firstRange}" و"${lastRange}". ستظهر لك تفسيراً مفصلاً وتوصيات بعد إكمال الاختبار.`,
+    },
+  ];
+}
+
+function buildFAQSchema(config: TestConfig) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: buildFAQItems(config).map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: { "@type": "Answer", text: a },
+    })),
+  };
+}
+
 type Props = { params: Promise<{ test: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -184,11 +320,51 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
       title: "واعي | عن الموقع",
       description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
+      alternates: { canonical: `/عن-الموقع` },
+      openGraph: {
+        title: "واعي | عن الموقع",
+        description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
+        url: `/عن-الموقع`,
+      },
+      twitter: {
+        title: "واعي | عن الموقع",
+        description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
+      },
+    };
+  }
+  if (slug === "سياسة-الخصوصية") {
+    return {
+      title: "سياسة الخصوصية | واعي",
+      description: "واعي لا يجمع أي بيانات شخصية. نتائج الاختبارات تبقى في متصفحك فقط — لا خوادم، لا تسجيل، لا تتبع.",
+      alternates: { canonical: `/سياسة-الخصوصية` },
+      openGraph: {
+        title: "سياسة الخصوصية | واعي",
+        description: "واعي لا يجمع أي بيانات شخصية. نتائج الاختبارات تبقى في متصفحك فقط.",
+        url: `/سياسة-الخصوصية`,
+      },
+      twitter: {
+        title: "سياسة الخصوصية | واعي",
+        description: "واعي لا يجمع أي بيانات شخصية. نتائج الاختبارات تبقى في متصفحك فقط.",
+      },
     };
   }
   const meta = metaBySlug[slug];
   if (!meta) return {};
-  return { title: meta.title, description: meta.description, keywords: meta.keywords };
+  return {
+    title: meta.title,
+    description: meta.description,
+    keywords: meta.keywords,
+    alternates: { canonical: `/${slug}` },
+    openGraph: {
+      title: meta.title,
+      description: meta.description,
+      url: `/${slug}`,
+    },
+    twitter: {
+      title: meta.title,
+      description: meta.description,
+    },
+  };
 }
 
 export default async function TestPage({ params }: Props) {
@@ -199,14 +375,87 @@ export default async function TestPage({ params }: Props) {
     return <AboutPage />;
   }
 
+  if (slug === "سياسة-الخصوصية") {
+    return <PrivacyPage />;
+  }
+
   const config = testsBySlug[slug];
   if (!config) notFound();
 
+  const meta = metaBySlug[slug];
+  const schema = meta ? buildTestSchema(slug, meta) : null;
+  const faqSchema = buildFAQSchema(config);
+  const faqItems = buildFAQItems(config);
+  const source = sourceBySlug[slug];
+  const relatedTests = (relatedBySlug[slug] ?? [])
+    .map((s) => testsBySlug[s] ? { name: testsBySlug[s].name, slug: s } : null)
+    .filter((t): t is { name: string; slug: string } => t !== null);
+
   return (
     <div className="min-h-screen flex flex-col">
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      )}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
       <Header />
       <main className="flex-1">
-        <TestEngine config={config} />
+        <section className="bg-gradient-to-b from-sage-50 to-background py-12 px-4">
+          <div className="max-w-2xl mx-auto text-center flex flex-col gap-4">
+            <span className="text-5xl" aria-hidden="true">{config.icon}</span>
+            <h1 className="text-3xl font-bold text-foreground">{config.name}</h1>
+            <p className="text-muted-foreground leading-relaxed text-lg">
+              {config.longDescription}
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
+              <span>⏱ {config.estimatedMinutes} دقائق</span>
+              <span className="text-sage-500">·</span>
+              <span>📋 {config.questions.length} سؤالاً</span>
+              <span className="text-sage-500">·</span>
+              <span>🔒 مجاني وسري</span>
+            </div>
+            {source && (
+              <p className="text-xs text-muted-foreground border-t border-border pt-3 mt-1">
+                مستند إلى:{" "}
+                <strong className="text-foreground">{source.scale}</strong>
+                {" — "}{source.authors}
+                {" · "}
+                <a
+                  href={source.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-sage-500 hover:underline"
+                >
+                  المصدر العلمي ↗
+                </a>
+              </p>
+            )}
+          </div>
+        </section>
+
+        <TestEngine config={config} compact relatedTests={relatedTests} />
+
+        <section className="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-3">
+          <h2 className="text-xl font-bold text-foreground mb-1">أسئلة شائعة</h2>
+          {faqItems.map(({ q, a }) => (
+            <details
+              key={q}
+              className="border border-border rounded-xl overflow-hidden"
+            >
+              <summary className="px-5 py-4 cursor-pointer font-medium text-foreground select-none">
+                {q}
+              </summary>
+              <p className="px-5 pb-5 pt-1 text-sm text-muted-foreground leading-relaxed">
+                {a}
+              </p>
+            </details>
+          ))}
+        </section>
       </main>
       <Footer />
     </div>

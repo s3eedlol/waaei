@@ -1,5 +1,12 @@
 import { MetadataRoute } from "next";
 
+// Update these dates when content meaningfully changes.
+// Never use new Date() here — that tells GSC every page changed on every build.
+const HOMEPAGE_UPDATED = new Date("2026-05-22");
+const TESTS_UPDATED = new Date("2026-05-22");
+const ABOUT_UPDATED = new Date("2026-04-01");
+const PRIVACY_UPDATED = new Date("2026-05-22");
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = "https://waaei.me";
 
@@ -32,19 +39,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
       url: base,
-      lastModified: new Date(),
+      lastModified: HOMEPAGE_UPDATED,
       changeFrequency: "weekly",
       priority: 1,
     },
     {
       url: `${base}/عن-الموقع`,
-      lastModified: new Date(),
+      lastModified: ABOUT_UPDATED,
       changeFrequency: "monthly" as const,
       priority: 0.6,
     },
+    {
+      url: `${base}/سياسة-الخصوصية`,
+      lastModified: PRIVACY_UPDATED,
+      changeFrequency: "yearly" as const,
+      priority: 0.3,
+    },
     ...testSlugs.map((slug) => ({
       url: `${base}/${slug}`,
-      lastModified: new Date(),
+      lastModified: TESTS_UPDATED,
       changeFrequency: "monthly" as const,
       priority: 0.9,
     })),

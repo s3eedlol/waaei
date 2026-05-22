@@ -42,11 +42,41 @@ Arabic-named directories under `app/` break the build in two ways:
 ### Scoring
 `lib/scoring.ts` — `calculateScore()` handles reversed items (e.g. PSS, RSES). `maxValue = answerOptions.length - 1`. Score ranges defined per-test in `TestConfig.scoreRanges`.
 
+## SEO architecture — data maps in `app/[test]/page.tsx`
+All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When adding a new test, update all five maps:
+
+| Map | Purpose |
+|-----|---------|
+| `testsBySlug` | Slug → TestConfig (routing) |
+| `metaBySlug` | Slug → title, description, keywords |
+| `conditionBySlug` | Slug → MedicalCondition schema (name + alternateName) |
+| `sourceBySlug` | Slug → clinical scale name, authors, source URL |
+| `relatedBySlug` | Slug → 3 related test slugs (shown after results) |
+
+Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the footer links in `components/Footer.tsx`.
+
+### OG image generation
+`app/opengraph-image.tsx` — homepage OG image (1200×630, dark green brand).
+`app/[test]/opengraph-image.tsx` — per-test OG image using Cairo font fetched from Google Fonts at edge runtime. Uses the `testsBySlug` map to look up name + icon.
+
+### TestEngine props
+`components/TestEngine.tsx` accepts:
+- `config: TestConfig` — required
+- `compact?: boolean` — hides the intro header/description/info-card (used when the page renders an SSR intro section above the engine)
+- `relatedTests?: { name: string; slug: string }[]` — shown in the results phase as "قد يهمك أيضاً" links
+
+### Non-test pages
+Live pages served from `[test]` route:
+- `/عن-الموقع` → `components/AboutPage.tsx`
+- `/سياسة-الخصوصية` → `components/PrivacyPage.tsx`
+
 ## Adding a new test
 1. Create `lib/tests/{id}.ts` exporting `{id}Config: TestConfig`
-2. Add slug → config mapping in `app/[test]/page.tsx` (`testsBySlug` and `metaBySlug`)
+2. Add slug → config mapping in `app/[test]/page.tsx` — update ALL five maps: `testsBySlug`, `metaBySlug`, `conditionBySlug`, `sourceBySlug`, `relatedBySlug`
 3. Add config to the relevant category array in `app/page.tsx`
-4. Add slug to `app/sitemap.ts`
+4. Add slug to `app/sitemap.ts` (update `TESTS_UPDATED` date)
+5. Add slug → config to `app/[test]/opengraph-image.tsx`
+6. Add test link to the correct category column in `components/Footer.tsx`
 
 ## Adding a new non-test page (e.g. about, privacy)
 1. Create the page as a component in `components/` (e.g. `components/MyPage.tsx`)
@@ -77,7 +107,7 @@ Arabic-named directories under `app/` break the build in two ways:
 | eat7 | EAT-7 Eating disorders | اختبار-اضطراب-الأكل |
 | mdq | MDQ Bipolar | اختبار-ثنائي-القطب |
 | dass21 | DASS-21 Comprehensive | اختبار-الاكتئاب-والقلق-والتوتر |
-| bpni | B-PNI Narcissism | اختبار-الشخصية-النرجسية |
+| bpni | PNI-16 Narcissism | اختبار-الشخصية-النرجسية |
 | psqi | PSQI Sleep quality | اختبار-جودة-النوم |
 | ptgi | PTGI-SF Post-traumatic growth | اختبار-النمو-بعد-الصدمة |
 | auditc | AUDIT-C Substances | اختبار-أنماط-الاستهلاك |

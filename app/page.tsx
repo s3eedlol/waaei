@@ -31,6 +31,20 @@ export const metadata: Metadata = {
   title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
   description:
     "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
+    description:
+      "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+    url: "/",
+  },
+  twitter: {
+    title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
+    description:
+      "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+  },
 };
 
 const moodTests: TestConfig[] = [phq9Config, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig];
@@ -47,9 +61,42 @@ const sections: Section[] = [
   { title: "الشخصية والعلاقات", tests: personalityTests },
 ];
 
+const allTests = sections.flatMap((s) => s.tests);
+
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "واعي",
+  url: "https://waaei.me",
+  description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية — مبنية على مقاييس علمية مُتحقَّق منها",
+  inLanguage: "ar",
+  publisher: { "@type": "Organization", name: "واعي", url: "https://waaei.me" },
+};
+
+const itemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "اختبارات الصحة النفسية بالعربية",
+  numberOfItems: allTests.length,
+  itemListElement: allTests.map((config, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: config.name,
+    url: `https://waaei.me/${config.slug}`,
+  })),
+};
+
 export default function HomePage() {
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteSchema) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       <Header />
 
       <main className="flex-1">

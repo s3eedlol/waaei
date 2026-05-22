@@ -7,7 +7,9 @@ import { cn } from "@/lib/utils";
 
 type Phase = "intro" | "test" | "results";
 
-export function TestEngine({ config }: { config: TestConfig }) {
+type RelatedTest = { name: string; slug: string };
+
+export function TestEngine({ config, compact = false, relatedTests }: { config: TestConfig; compact?: boolean; relatedTests?: RelatedTest[] }) {
   const [phase, setPhase] = useState<Phase>("intro");
   const [currentIndex, setCurrentIndex] = useState(0);
   const [answers, setAnswers] = useState<Record<number, number>>({});
@@ -42,28 +44,32 @@ export function TestEngine({ config }: { config: TestConfig }) {
   if (phase === "intro") {
     return (
       <div className="max-w-2xl mx-auto px-4 py-10 flex flex-col gap-8">
-        <div className="text-center">
-          <span className="text-6xl">{config.icon}</span>
-          <h1 className="text-3xl font-bold mt-4">{config.name}</h1>
-          <p className="mt-3 text-lg leading-relaxed" style={{ color: "oklch(50% 0.01 270)" }}>
-            {config.longDescription}
-          </p>
-        </div>
+        {!compact && (
+          <div className="text-center">
+            <span className="text-6xl">{config.icon}</span>
+            <h1 className="text-3xl font-bold mt-4">{config.name}</h1>
+            <p className="mt-3 text-lg leading-relaxed" style={{ color: "oklch(50% 0.01 270)" }}>
+              {config.longDescription}
+            </p>
+          </div>
+        )}
 
-        <div className="rounded-2xl p-5 flex flex-col gap-3 text-sm" style={{ background: "oklch(96% 0.005 80)", color: "oklch(50% 0.01 270)" }}>
-          <div className="flex items-center gap-2">
-            <span>⏱</span>
-            <span>المدة التقديرية: {config.estimatedMinutes} دقائق</span>
+        {!compact && (
+          <div className="rounded-2xl p-5 flex flex-col gap-3 text-sm" style={{ background: "oklch(96% 0.005 80)", color: "oklch(50% 0.01 270)" }}>
+            <div className="flex items-center gap-2">
+              <span>⏱</span>
+              <span>المدة التقديرية: {config.estimatedMinutes} دقائق</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>🔒</span>
+              <span>سري تماماً — لا يُحفظ أي شيء</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span>📋</span>
+              <span>{totalQuestions} أسئلة</span>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <span>🔒</span>
-            <span>سري تماماً — لا يُحفظ أي شيء</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>📋</span>
-            <span>{totalQuestions} أسئلة</span>
-          </div>
-        </div>
+        )}
 
         <p className="text-xs text-center rounded-xl p-4 border" style={{ color: "oklch(50% 0.01 270)", borderColor: "oklch(91% 0.005 80)" }}>
           {config.disclaimer}
@@ -224,6 +230,29 @@ export function TestEngine({ config }: { config: TestConfig }) {
       <p className="text-xs text-center rounded-xl p-3 border" style={{ color: "oklch(50% 0.01 270)", borderColor: "oklch(91% 0.005 80)" }}>
         {config.disclaimer}
       </p>
+
+      {relatedTests && relatedTests.length > 0 && (
+        <div className="flex flex-col gap-3 pt-2">
+          <p className="text-sm font-semibold" style={{ color: "oklch(50% 0.01 270)" }}>
+            قد يهمك أيضاً
+          </p>
+          <div className="flex flex-col gap-2">
+            {relatedTests.map((t) => (
+              <a
+                key={t.slug}
+                href={`/${t.slug}`}
+                className="flex items-center justify-between px-4 py-3 rounded-xl border text-sm font-medium transition-colors"
+                style={{ borderColor: "oklch(91% 0.005 80)", color: "oklch(55% 0.12 145)" }}
+                onMouseOver={(e) => (e.currentTarget.style.background = "oklch(97% 0.02 145)")}
+                onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
+              >
+                <span>{t.name}</span>
+                <span style={{ color: "oklch(70% 0.01 270)" }}>←</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
