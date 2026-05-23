@@ -314,19 +314,21 @@ function buildFAQSchema(config: TestConfig) {
 
 // ── Per-test intro layout helpers ────────────────────────────────────────────
 const categoryColorMap: Record<TestConfig["category"], string> = {
-  mood:    "#5e7bbf",
-  anxiety: "#d0a236",
-  ocd:     "#d0a236",
-  work:    "#c25940",
-  stress:  "#c25940",
+  mood:        "#5e7bbf",
+  anxiety:     "#d0a236",
+  ocd:         "#d0a236",
+  work:        "#c25940",
+  stress:      "#c25940",
+  personality: "#9c7bb8",
 };
 
 const categoryLabelMap: Record<TestConfig["category"], string> = {
-  mood:    "المزاج",
-  anxiety: "القلق",
-  work:    "العمل",
-  stress:  "التوتر",
-  ocd:     "الوسواس",
+  mood:        "المزاج",
+  anxiety:     "القلق",
+  work:        "العمل",
+  stress:      "التوتر",
+  ocd:         "الوسواس",
+  personality: "الشخصية",
 };
 
 // Trust pillars — verbatim from the live "لماذا واعي؟" section (app/page.tsx)
