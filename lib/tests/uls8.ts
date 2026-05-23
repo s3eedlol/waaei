@@ -8,7 +8,7 @@ export const uls8Config: TestConfig = {
   longDescription:
     "يعتمد هذا الاختبار على مقياس UCLA للوحدة النفسية (النسخة المختصرة ULS-8)، المُتحقَّق منه في دراسات سعودية وإماراتية وفلسطينية. الوحدة النفسية ليست مجرد الوجود المنفرد — بل هي الشعور بانعدام التواصل الحقيقي مع الآخرين.",
   estimatedMinutes: 2,
-  category: "mood",
+  category: "personality",
   icon: "🌌",
   answerOptions: [
     { label: "أبداً", value: 0 },

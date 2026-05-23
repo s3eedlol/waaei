@@ -8,7 +8,7 @@ export const bfi10Config: TestConfig = {
   longDescription:
     "يعتمد هذا الاختبار على مقياس BFI-10 للشخصية الكبرى، المُتحقَّق منه في دراسات كويتية ومصرية ولبنانية. يقيّم خمسة أبعاد أساسية للشخصية: الانفتاح، والضمير، والانبساطية، والقبول، والعصابية. أجب بصدق كما أنت في الواقع، وليس كما تتمنى أن تكون.",
   estimatedMinutes: 3,
-  category: "mood",
+  category: "personality",
   icon: "🎭",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },

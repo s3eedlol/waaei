@@ -3,7 +3,7 @@
 @source "../components/**/*.tsx";
 
 @theme {
-  --font-cairo: var(--font-cairo-var);
+  --font-tajawal: var(--font-tajawal-var);
 
   --color-sage-50: oklch(97% 0.02 145);
   --color-sage-100: oklch(93% 0.04 145);
@@ -57,15 +57,115 @@
     --border: oklch(91% 0.005 80);
   }
 
+  /* ─── Waaei redesign tokens (--waaei-* namespace) ─── */
+
+  :root,
+  [data-theme="sage"] {
+    --waaei-bg:      #eef2ea;
+    --waaei-surface: #ffffff;
+    --waaei-ink:     #1f2a23;
+    --waaei-mute:    #6e7a70;
+    --waaei-rule:    rgba(31, 42, 35, 0.08);
+    --waaei-accent:  #5c6e54;
+    --waaei-trust:   #1f2a23;
+  }
+
+  [data-theme="sand"] {
+    --waaei-bg:      #f3ede2;
+    --waaei-surface: #ffffff;
+    --waaei-ink:     #2a261f;
+    --waaei-mute:    #7a7165;
+    --waaei-rule:    rgba(42, 38, 31, 0.08);
+    --waaei-accent:  #c25940;
+    --waaei-trust:   #5c6e54;
+  }
+
+  [data-theme="paper"] {
+    --waaei-bg:      #f5f3ef;
+    --waaei-surface: #ffffff;
+    --waaei-ink:     #171413;
+    --waaei-mute:    #7a7165;
+    --waaei-rule:    rgba(23, 20, 19, 0.08);
+    --waaei-accent:  #171413;
+    --waaei-trust:   #171413;
+  }
+
+  :root {
+    /* Category colors */
+    --waaei-cat-depression:  #5e7bbf;
+    --waaei-cat-anxiety:     #d0a236;
+    --waaei-cat-stress:      #c25940;
+    --waaei-cat-personality: #9c7bb8;
+
+    /* Severity band colors */
+    --waaei-band-minimal:  #9ec79f;
+    --waaei-band-mild:     #d8c879;
+    --waaei-band-moderate: #d8a26b;
+    --waaei-band-modsev:   #cf6f4d;
+    --waaei-band-severe:   #a8392b;
+
+    /* Font — Cairo (existing brand font) */
+    --waaei-font-sans: var(--font-tajawal-var), system-ui, -apple-system, sans-serif;
+
+    /* Type scale */
+    --waaei-text-xs:      11px;
+    --waaei-text-sm:      13px;
+    --waaei-text-base:    14px;
+    --waaei-text-lg:      16px;
+    --waaei-text-xl:      19px;
+    --waaei-display-sm:   22px;
+    --waaei-display-md:   30px;
+    --waaei-display-lg:   60px;
+
+    /* Font weights */
+    --waaei-w-regular:  400;
+    --waaei-w-medium:   500;
+    --waaei-w-semibold: 600;
+    --waaei-w-bold:     700;
+    --waaei-w-black:    800;
+
+    /* Line heights */
+    --waaei-lh-tight: 1.25;
+    --waaei-lh-snug:  1.4;
+    --waaei-lh-body:  1.7;
+
+    /* Spacing */
+    --waaei-space-1:  4px;
+    --waaei-space-2:  8px;
+    --waaei-space-3:  12px;
+    --waaei-space-4:  16px;
+    --waaei-space-5:  22px;
+    --waaei-space-6:  28px;
+    --waaei-space-8:  40px;
+    --waaei-space-10: 56px;
+    --waaei-space-12: 64px;
+
+    /* Radii */
+    --waaei-radius-sm:   8px;
+    --waaei-radius-md:   14px;
+    --waaei-radius-lg:   18px;
+    --waaei-radius-xl:   22px;
+    --waaei-radius-pill: 999px;
+
+    /* Elevation */
+    --waaei-shadow-card:    0 1px 2px rgba(0,0,0,0.04), 0 12px 32px rgba(0,0,0,0.05);
+    --waaei-shadow-cta:     0 8px 24px rgba(0,0,0,0.12);
+    --waaei-shadow-popover: 0 4px 14px rgba(0,0,0,0.06), 0 0 0 1px rgba(0,0,0,0.04);
+
+    /* Motion */
+    --waaei-motion-fast:    .15s;
+    --waaei-motion-default: .18s;
+  }
+
   *, *::before, *::after {
     border-color: var(--color-zinc-200);
     box-sizing: border-box;
   }
 
   body {
-    background-color: oklch(99% 0.005 80);
+    background-color: var(--waaei-bg);
     color: oklch(15% 0.02 270);
-    font-family: var(--font-cairo), system-ui, sans-serif;
+    font-family: var(--font-tajawal-var), system-ui, sans-serif;
     direction: rtl;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;

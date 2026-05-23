@@ -5,6 +5,7 @@ import { Footer } from "@/components/Footer";
 import { TestEngine } from "@/components/TestEngine";
 import { AboutPage } from "@/components/AboutPage";
 import { PrivacyPage } from "@/components/PrivacyPage";
+import { AllTestsPage } from "@/components/AllTestsPage";
 import { phq9Config } from "@/lib/tests/phq9";
 import { gad7Config } from "@/lib/tests/gad7";
 import { burnoutConfig } from "@/lib/tests/burnout";
@@ -35,7 +36,7 @@ export const dynamic = "force-dynamic";
 const testsBySlug: Record<string, TestConfig> = {
   "اختبار-الاكتئاب": phq9Config,
   "اختبار-القلق": gad7Config,
-  "اختبار-الإرهاق-الوظيفي": burnoutConfig,
+  "اختبار-الإحتراق-الوظيفي": burnoutConfig,
   "اختبار-التوتر": pssConfig,
   "اختبار-الوسواس-القهري": ocirConfig,
   "اختبار-ADHD-للبالغين": asrs5Config,
@@ -69,10 +70,10 @@ const metaBySlug: Record<string, { title: string; description: string; keywords:
     description: "اختبر مستوى قلقك بمقياس GAD-7 العلمي. هل لدي قلق مزمن؟ اكتشف بشكل سري ومجاني.",
     keywords: ["اختبار القلق النفسي", "هل لدي قلق مزمن", "GAD-7 عربي", "اضطراب القلق العام"],
   },
-  "اختبار-الإرهاق-الوظيفي": {
-    title: "اختبار الإرهاق الوظيفي — هل أنا محترق وظيفياً؟",
+  "اختبار-الإحتراق-الوظيفي": {
+    title: "اختبار الإحتراق الوظيفي — هل أنا محترق وظيفياً؟",
     description: "اختبر نفسك للكشف عن الاحتراق الوظيفي. أعراض الاحتراق النفسي في العمل — اكتشف مستواك بسرية تامة.",
-    keywords: ["اختبار الإرهاق الوظيفي", "هل أنا محترق وظيفياً", "أعراض الاحتراق النفسي"],
+    keywords: ["اختبار الإحتراق الوظيفي", "هل أنا محترق وظيفياً", "أعراض الاحتراق النفسي"],
   },
   "اختبار-التوتر": {
     title: "اختبار التوتر النفسي — كيف مستوى ضغطك؟",
@@ -181,7 +182,7 @@ type MedicalCondition = { "@type": "MedicalCondition"; name: string; alternateNa
 const conditionBySlug: Record<string, MedicalCondition> = {
   "اختبار-الاكتئاب":              { "@type": "MedicalCondition", name: "Depression",                          alternateName: "الاكتئاب" },
   "اختبار-القلق":                  { "@type": "MedicalCondition", name: "Generalized Anxiety Disorder",        alternateName: "اضطراب القلق العام" },
-  "اختبار-الإرهاق-الوظيفي":        { "@type": "MedicalCondition", name: "Occupational Burnout",               alternateName: "الإرهاق الوظيفي" },
+  "اختبار-الإحتراق-الوظيفي":        { "@type": "MedicalCondition", name: "Occupational Burnout",               alternateName: "الإحتراق الوظيفي" },
   "اختبار-التوتر":                 { "@type": "MedicalCondition", name: "Psychological Stress",                alternateName: "التوتر النفسي" },
   "اختبار-الوسواس-القهري":          { "@type": "MedicalCondition", name: "Obsessive-Compulsive Disorder",      alternateName: "الوسواس القهري" },
   "اختبار-ADHD-للبالغين":           { "@type": "MedicalCondition", name: "Attention Deficit Hyperactivity Disorder", alternateName: "اضطراب نقص الانتباه وفرط الحركة" },
@@ -209,7 +210,7 @@ type ScaleSource = { scale: string; authors: string; url: string };
 const sourceBySlug: Record<string, ScaleSource> = {
   "اختبار-الاكتئاب":              { scale: "PHQ-9 (Patient Health Questionnaire)",              authors: "Kroenke & Spitzer, 2001",                      url: "https://pubmed.ncbi.nlm.nih.gov/11556941/" },
   "اختبار-القلق":                  { scale: "GAD-7 (Generalized Anxiety Disorder Scale)",         authors: "Spitzer et al., 2006",                         url: "https://pubmed.ncbi.nlm.nih.gov/16717171/" },
-  "اختبار-الإرهاق-الوظيفي":        { scale: "ICD-11 Occupational Burnout",                       authors: "منظمة الصحة العالمية (WHO), 2019",              url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases" },
+  "اختبار-الإحتراق-الوظيفي":        { scale: "ICD-11 Occupational Burnout",                       authors: "منظمة الصحة العالمية (WHO), 2019",              url: "https://www.who.int/news/item/28-05-2019-burn-out-an-occupational-phenomenon-international-classification-of-diseases" },
   "اختبار-التوتر":                 { scale: "PSS-10 (Perceived Stress Scale)",                   authors: "Cohen et al., 1983",                           url: "https://pubmed.ncbi.nlm.nih.gov/6668417/" },
   "اختبار-الوسواس-القهري":          { scale: "OCI-R (Obsessive Compulsive Inventory-Revised)",    authors: "Foa et al., 2002",                             url: "https://pubmed.ncbi.nlm.nih.gov/12501574/" },
   "اختبار-ADHD-للبالغين":           { scale: "ASRS-5 (Adult ADHD Self-Report Scale)",             authors: "Kessler et al., 2005 — منظمة الصحة العالمية",  url: "https://pubmed.ncbi.nlm.nih.gov/15841682/" },
@@ -235,27 +236,27 @@ const sourceBySlug: Record<string, ScaleSource> = {
 const relatedBySlug: Record<string, string[]> = {
   "اختبار-الاكتئاب":              ["اختبار-القلق", "اختبار-التوتر", "اختبار-تقدير-الذات"],
   "اختبار-القلق":                  ["اختبار-الاكتئاب", "اختبار-الرهاب-الاجتماعي", "اختبار-الصدمة-النفسية"],
-  "اختبار-الإرهاق-الوظيفي":        ["اختبار-التوتر", "اختبار-ADHD-للبالغين", "اختبار-جودة-النوم"],
-  "اختبار-التوتر":                 ["اختبار-الإرهاق-الوظيفي", "اختبار-الاكتئاب", "اختبار-القلق"],
+  "اختبار-الإحتراق-الوظيفي":        ["اختبار-التوتر", "اختبار-ADHD-للبالغين", "اختبار-جودة-النوم"],
+  "اختبار-التوتر":                 ["اختبار-الإحتراق-الوظيفي", "اختبار-الاكتئاب", "اختبار-القلق"],
   "اختبار-الوسواس-القهري":          ["اختبار-القلق", "اختبار-الاكتئاب", "اختبار-ADHD-للبالغين"],
-  "اختبار-ADHD-للبالغين":           ["اختبار-الإرهاق-الوظيفي", "اختبار-التوتر", "اختبار-جودة-النوم"],
+  "اختبار-ADHD-للبالغين":           ["اختبار-الإحتراق-الوظيفي", "اختبار-التوتر", "اختبار-جودة-النوم"],
   "اختبار-الصدمة-النفسية":          ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-النمو-بعد-الصدمة"],
-  "اختبار-الأرق":                  ["اختبار-جودة-النوم", "اختبار-التوتر", "اختبار-الإرهاق-الوظيفي"],
+  "اختبار-الأرق":                  ["اختبار-جودة-النوم", "اختبار-التوتر", "اختبار-الإحتراق-الوظيفي"],
   "اختبار-تقدير-الذات":             ["اختبار-الاكتئاب", "اختبار-الوحدة-النفسية", "اختبار-الشخصية-النرجسية"],
   "اختبار-الرهاب-الاجتماعي":        ["اختبار-القلق", "اختبار-الوحدة-النفسية", "اختبار-تقدير-الذات"],
   "اختبار-الشخصية-الخمسة":          ["اختبار-نمط-التعلق-العاطفي", "اختبار-الذكاء-العاطفي", "اختبار-الشخصية-النرجسية"],
   "اختبار-نمط-التعلق-العاطفي":      ["اختبار-الشخصية-الخمسة", "اختبار-الوحدة-النفسية", "اختبار-الرهاب-الاجتماعي"],
-  "اختبار-إدمان-الهاتف":            ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الوحدة-النفسية"],
+  "اختبار-إدمان-الهاتف":            ["اختبار-التوتر", "اختبار-الإحتراق-الوظيفي", "اختبار-الوحدة-النفسية"],
   "اختبار-الذكاء-العاطفي":          ["اختبار-الشخصية-الخمسة", "اختبار-نمط-التعلق-العاطفي", "اختبار-الغضب"],
   "اختبار-الوحدة-النفسية":          ["اختبار-تقدير-الذات", "اختبار-الاكتئاب", "اختبار-الرهاب-الاجتماعي"],
-  "اختبار-الغضب":                  ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الصدمة-النفسية"],
+  "اختبار-الغضب":                  ["اختبار-التوتر", "اختبار-الإحتراق-الوظيفي", "اختبار-الصدمة-النفسية"],
   "اختبار-اضطراب-الأكل":            ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-تقدير-الذات"],
   "اختبار-ثنائي-القطب":             ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-الاكتئاب-والقلق-والتوتر"],
   "اختبار-الاكتئاب-والقلق-والتوتر": ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-التوتر"],
   "اختبار-الشخصية-النرجسية":        ["اختبار-الشخصية-الخمسة", "اختبار-نمط-التعلق-العاطفي", "اختبار-تقدير-الذات"],
-  "اختبار-جودة-النوم":              ["اختبار-الأرق", "اختبار-التوتر", "اختبار-الإرهاق-الوظيفي"],
+  "اختبار-جودة-النوم":              ["اختبار-الأرق", "اختبار-التوتر", "اختبار-الإحتراق-الوظيفي"],
   "اختبار-النمو-بعد-الصدمة":        ["اختبار-الصدمة-النفسية", "اختبار-الاكتئاب", "اختبار-تقدير-الذات"],
-  "اختبار-أنماط-الاستهلاك":         ["اختبار-التوتر", "اختبار-الإرهاق-الوظيفي", "اختبار-الاكتئاب"],
+  "اختبار-أنماط-الاستهلاك":         ["اختبار-التوتر", "اختبار-الإحتراق-الوظيفي", "اختبار-الاكتئاب"],
 };
 
 function buildTestSchema(slug: string, meta: { title: string; description: string }) {
@@ -311,6 +312,30 @@ function buildFAQSchema(config: TestConfig) {
   };
 }
 
+// ── Per-test intro layout helpers ────────────────────────────────────────────
+const categoryColorMap: Record<TestConfig["category"], string> = {
+  mood:    "#5e7bbf",
+  anxiety: "#d0a236",
+  ocd:     "#d0a236",
+  work:    "#c25940",
+  stress:  "#c25940",
+};
+
+const categoryLabelMap: Record<TestConfig["category"], string> = {
+  mood:    "المزاج",
+  anxiety: "القلق",
+  work:    "العمل",
+  stress:  "التوتر",
+  ocd:     "الوسواس",
+};
+
+// Trust pillars — verbatim from the live "لماذا واعي؟" section (app/page.tsx)
+const TRUST_PILLARS = [
+  { title: "مبني علمياً",     body: "جميع الاختبارات مبنية على مقاييس مُتحقَّق منها ومُستخدَمة في الأبحاث العالمية" },
+  { title: "خصوصية تامة",    body: "لا حساب، لا بريد إلكتروني، لا حفظ بيانات. نتائجك تبقى معك فقط" },
+  { title: "باللغة العربية", body: "مُصمَّم خصيصاً للمستخدم العربي بلغة واضحة وسهلة وبعيدة عن التعقيد الطبي" },
+];
+
 type Props = { params: Promise<{ test: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -318,23 +343,23 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const slug = decodeURIComponent(test);
   if (slug === "عن-الموقع") {
     return {
-      title: "واعي | عن الموقع",
+      title: { absolute: "عن الموقع | واعي" },
       description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
       alternates: { canonical: `/عن-الموقع` },
       openGraph: {
-        title: "واعي | عن الموقع",
+        title: "عن الموقع | واعي",
         description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
         url: `/عن-الموقع`,
       },
       twitter: {
-        title: "واعي | عن الموقع",
+        title: "عن الموقع | واعي",
         description: "تعرّف على واعي، منصة الصحة النفسية العربية، وشركة Emdash المشغّلة لها.",
       },
     };
   }
   if (slug === "سياسة-الخصوصية") {
     return {
-      title: "سياسة الخصوصية | واعي",
+      title: { absolute: "سياسة الخصوصية | واعي" },
       description: "واعي لا يجمع أي بيانات شخصية. نتائج الاختبارات تبقى في متصفحك فقط — لا خوادم، لا تسجيل، لا تتبع.",
       alternates: { canonical: `/سياسة-الخصوصية` },
       openGraph: {
@@ -345,6 +370,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       twitter: {
         title: "سياسة الخصوصية | واعي",
         description: "واعي لا يجمع أي بيانات شخصية. نتائج الاختبارات تبقى في متصفحك فقط.",
+      },
+    };
+  }
+  if (slug === "اختبارات") {
+    return {
+      title: { absolute: "جميع الاختبارات النفسية | واعي" },
+      description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية — الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر.",
+      alternates: { canonical: `/اختبارات` },
+      openGraph: {
+        title: "جميع الاختبارات النفسية | واعي",
+        description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية.",
+        url: `/اختبارات`,
+      },
+      twitter: {
+        title: "جميع الاختبارات النفسية | واعي",
+        description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية.",
       },
     };
   }
@@ -379,6 +420,10 @@ export default async function TestPage({ params }: Props) {
     return <PrivacyPage />;
   }
 
+  if (slug === "اختبارات") {
+    return <AllTestsPage />;
+  }
+
   const config = testsBySlug[slug];
   if (!config) notFound();
 
@@ -405,52 +450,198 @@ export default async function TestPage({ params }: Props) {
       />
       <Header />
       <main className="flex-1">
-        <section className="bg-gradient-to-b from-sage-50 to-background py-12 px-4">
-          <div className="max-w-2xl mx-auto text-center flex flex-col gap-4">
-            <span className="text-5xl" aria-hidden="true">{config.icon}</span>
-            <h1 className="text-3xl font-bold text-foreground">{config.name}</h1>
-            <p className="text-muted-foreground leading-relaxed text-lg">
-              {config.longDescription}
-            </p>
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-muted-foreground">
-              <span>⏱ {config.estimatedMinutes} دقائق</span>
-              <span className="text-sage-500">·</span>
-              <span>📋 {config.questions.length} سؤالاً</span>
-              <span className="text-sage-500">·</span>
-              <span>🔒 مجاني وسري</span>
-            </div>
-            {source && (
-              <p className="text-xs text-muted-foreground border-t border-border pt-3 mt-1">
-                مستند إلى:{" "}
-                <strong className="text-foreground">{source.scale}</strong>
-                {" — "}{source.authors}
-                {" · "}
-                <a
-                  href={source.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-sage-500 hover:underline"
-                >
-                  المصدر العلمي ↗
-                </a>
-              </p>
-            )}
+        {/* ── Test intro ─────────────────────────────────────────────── */}
+        <section
+          className="px-[22px] pt-[20px] pb-[24px] max-w-2xl mx-auto flex flex-col"
+          style={{ background: "var(--waaei-bg)" }}
+        >
+          {/* Category pill */}
+          <div style={{ marginBottom: 14 }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                padding: "5px 10px",
+                borderRadius: "var(--waaei-radius-pill)",
+                background: categoryColorMap[config.category] + "1f",
+                color: categoryColorMap[config.category],
+                fontSize: 10,
+                fontWeight: 700,
+                letterSpacing: "0.14em",
+              }}
+            >
+              {categoryLabelMap[config.category]}
+            </span>
           </div>
+
+          {/* H1 — disorder word after "اختبار " gets accent color */}
+          <h1
+            style={{
+              fontSize: 30,
+              fontWeight: 800,
+              color: "var(--waaei-ink)",
+              lineHeight: "var(--waaei-lh-tight)",
+              marginBottom: 12,
+            }}
+          >
+            اختبار{" "}
+            <span style={{ color: "var(--waaei-accent)" }}>
+              {config.name.startsWith("اختبار ") ? config.name.slice("اختبار ".length) : config.name}
+            </span>
+          </h1>
+
+          {/* Description — verbatim from config.longDescription */}
+          <p
+            style={{
+              fontSize: 14,
+              color: "var(--waaei-mute)",
+              lineHeight: "var(--waaei-lh-body)",
+              marginBottom: 20,
+            }}
+          >
+            {config.longDescription}
+          </p>
+
+          {/* Stats strip — 2-col surface card */}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              border: "1px solid var(--waaei-rule)",
+              borderRadius: 18,
+              background: "var(--waaei-surface)",
+              overflow: "hidden",
+              marginBottom: 28,
+            }}
+          >
+            {[
+              { value: config.estimatedMinutes, label: "دقائق" },
+              { value: config.questions.length, label: "سؤالاً" },
+            ].map((stat, i) => (
+              <div
+                key={stat.label}
+                style={{
+                  padding: 18,
+                  textAlign: "center",
+                  borderRight: i === 0 ? "1px solid var(--waaei-rule)" : undefined,
+                }}
+              >
+                <div style={{ fontSize: 28, fontWeight: 800, color: "var(--waaei-ink)" }}>
+                  {stat.value}
+                </div>
+                <div style={{ fontSize: 11, color: "var(--waaei-mute)", marginTop: 2 }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Trust pillars — "قبل أن تبدأ" */}
+          <div style={{ marginBottom: 20 }}>
+            <p
+              style={{
+                fontSize: 10,
+                fontWeight: 700,
+                textTransform: "uppercase",
+                letterSpacing: "0.12em",
+                color: "var(--waaei-mute)",
+                marginBottom: 10,
+              }}
+            >
+              قبل أن تبدأ
+            </p>
+            <div
+              style={{
+                background: "var(--waaei-surface)",
+                borderRadius: "var(--waaei-radius-md)",
+                overflow: "hidden",
+              }}
+            >
+              {TRUST_PILLARS.map((pillar, i) => (
+                <div
+                  key={pillar.title}
+                  style={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: 10,
+                    padding: "12px 14px",
+                    borderTop: i > 0 ? "1px solid var(--waaei-rule)" : undefined,
+                  }}
+                >
+                  <span
+                    style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: "50%",
+                      background: "var(--waaei-accent)",
+                      flexShrink: 0,
+                      marginTop: 5,
+                    }}
+                  />
+                  <div>
+                    <span style={{ fontSize: 13, fontWeight: 700, color: "var(--waaei-ink)" }}>
+                      {pillar.title}
+                    </span>
+                    {" — "}
+                    <span style={{ fontSize: 11, color: "var(--waaei-mute)" }}>
+                      {pillar.body}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Source citation */}
+          {source && (
+            <p
+              style={{
+                fontSize: 11,
+                color: "var(--waaei-mute)",
+                lineHeight: "var(--waaei-lh-body)",
+                marginBottom: 28,
+              }}
+            >
+              المصدر: {source.scale} — {source.authors}
+              {" · "}
+              <a
+                href={source.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "var(--waaei-accent)", textDecoration: "none" }}
+              >
+                المصدر العلمي ↗
+              </a>
+            </p>
+          )}
         </section>
 
+        {/* TestEngine — compact=true renders only CTA + disclaimer */}
         <TestEngine config={config} compact relatedTests={relatedTests} />
 
-        <section className="max-w-2xl mx-auto px-4 py-12 flex flex-col gap-3">
-          <h2 className="text-xl font-bold text-foreground mb-1">أسئلة شائعة</h2>
+        <section className="max-w-2xl mx-auto px-4 pt-8 pb-6 sm:py-12 flex flex-col gap-3">
+          <h2
+            className="text-xl font-bold mb-1"
+            style={{ color: "var(--waaei-ink)" }}
+          >
+            أسئلة شائعة
+          </h2>
           {faqItems.map(({ q, a }) => (
             <details
               key={q}
-              className="border border-border rounded-xl overflow-hidden"
+              className="rounded-xl overflow-hidden"
+              style={{ border: "1px solid var(--waaei-rule)" }}
             >
-              <summary className="px-5 py-4 cursor-pointer font-medium text-foreground select-none">
+              <summary
+                className="px-5 py-4 cursor-pointer font-medium select-none"
+                style={{ color: "var(--waaei-ink)" }}
+              >
                 {q}
               </summary>
-              <p className="px-5 pb-5 pt-1 text-sm text-muted-foreground leading-relaxed">
+              <p
+                className="px-5 pb-5 pt-1 text-sm leading-relaxed"
+                style={{ color: "var(--waaei-mute)" }}
+              >
                 {a}
               </p>
             </details>

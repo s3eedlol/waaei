@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
-import { Cairo } from "next/font/google";
+import { Tajawal } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import "./globals.css";
 
-const cairo = Cairo({
+const tajawal = Tajawal({
   subsets: ["arabic", "latin"],
-  variable: "--font-cairo-var",
+  variable: "--font-tajawal-var",
   display: "swap",
-  weight: ["400", "500", "600", "700"],
+  weight: ["400", "500", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -17,11 +17,11 @@ export const metadata: Metadata = {
     template: "%s | واعي",
   },
   description:
-    "اختبارات نفسية مجانية وسرية للتعرف على مستوى صحتك النفسية. اختبار الاكتئاب، القلق، الإرهاق الوظيفي والمزيد — بالعربية.",
+    "اختبارات نفسية مجانية وسرية للتعرف على مستوى صحتك النفسية. اختبار الاكتئاب، القلق، الإحتراق الوظيفي والمزيد — بالعربية.",
   keywords: [
     "اختبار الاكتئاب",
     "اختبار القلق النفسي",
-    "اختبار الإرهاق الوظيفي",
+    "اختبار الإحتراق الوظيفي",
     "الصحة النفسية",
     "PHQ-9 عربي",
     "GAD-7 عربي",
@@ -57,7 +57,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={`${cairo.variable} antialiased`}>
+      <body className={`${tajawal.variable} antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}

@@ -15,14 +15,18 @@
 ## Tech stack
 - Next.js 16 App Router + TypeScript
 - Tailwind CSS **v4** (CSS-first — no `tailwind.config.ts`, all theme in `app/globals.css` using `@theme` blocks)
-- Cairo Google Font (Arabic + Latin subsets)
+- **Tajawal** Google Font (Arabic + Latin subsets) — weights 400, 500, 700, 800 (**no 600 — Tajawal doesn't have it**); variable `--font-tajawal-var` set in `app/layout.tsx`
+  - **Font loading gotcha:** `body` references the font as `font-family: var(--font-tajawal-var), system-ui, sans-serif` **directly** — do NOT route it through an `@theme` variable (that resolves at compile time and loses the `var()` reference at `:root` scope, breaking the font)
 - `dir="rtl"` on `<html>`, RTL layout throughout
 - Vitest + @testing-library/react for unit tests
 - `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
 - `app/icon.png` — custom واعي app icon (dark green rounded square); Next.js App Router picks it up automatically as the favicon. Source file in `logo/`.
-- Header logo is **code-generated** in `components/Header.tsx` via a `LogoMark` component — no image file. Renders "واعي" in bold Cairo font with the "و" in sage-500 green (`oklch(55% 0.12 145)`) and "اعي" in dark green (`oklch(25% 0.06 145)`), inside a dark green outlined rounded border.
+- **Header logo** is **code-generated** in `components/Header.tsx` — no image file. An ink-filled 32×32 rounded square tile (borderRadius 9, `background: var(--waaei-ink)`) with the letter "و" centered in `var(--waaei-bg)` color, followed by the "واعي" wordmark (18px, 800 weight, `color: var(--waaei-ink)`). No separate LogoMark component — rendered inline in the header.
+- Header nav has **3 links**: الاختبارات → `/اختبارات` (ink color, active), عن الموقع → `/عن-الموقع` (mute), الخصوصية → `/سياسة-الخصوصية` (mute)
 - `app/layout.tsx` includes a global Organization JSON-LD `<script>` (واعي → parentOrg Emdash) via `dangerouslySetInnerHTML`.
 - `components/AboutPage.tsx` — about page component served at `/عن-الموقع` via the `[test]` dynamic route. Has its own Emdash+واعي Organization JSON-LD.
+- **Design tokens:** All brand colors and spacing live in `--waaei-*` CSS custom properties in `app/globals.css` (e.g. `--waaei-ink`, `--waaei-bg`, `--waaei-surface`, `--waaei-mute`, `--waaei-rule`, `--waaei-cat-depression`, etc.). Use `var(--waaei-*)` in inline styles — not hardcoded `oklch()` values for brand colors.
+- **ESLint:** `design_handoff_waaei_redesign/**` is in `globalIgnores` in `eslint.config.mjs` — do not remove.
 
 ## Critical architecture decisions
 
@@ -38,6 +42,15 @@ Arabic-named directories under `app/` break the build in two ways:
 
 ### TestEngine uses zero shadcn/third-party components
 `components/TestEngine.tsx` is pure HTML + inline styles. Progress bar is a plain `<div>` with `width: ${pct}%`. Answer buttons use `aria-pressed` and inline `style` for selected state. This avoids shadcn base-nova component quirks and Tailwind purging.
+
+**TestEngine overlay architecture:** Both the test phase and results phase render as a full-screen fixed overlay (`position: fixed; inset: 0; z-index: 200; overflowY: auto; background: var(--waaei-bg)`). An `overlayRef` + `useEffect([phase, currentIndex])` scrolls the overlay to the top on every question change and when results appear.
+
+**Question counter bidi fix:** The counter (`{currentIndex + 1} / {totalQuestions}`) is wrapped in a `div` with `dir="ltr"` and `textAlign: "right"` — without this, RTL context reverses "1 / 9" to "9 / 1".
+
+**Scale visualization — RTL convention:** The severity scale on the results screen follows RTL direction: **green (score 0) on the RIGHT, red (severe/max) on the LEFT**. Implementation:
+- Container is RTL flex; band segments render left→right in DOM but appear right→left visually
+- "أنت" marker position: `right: (finalScore / maxScore) * 100%` + `transform: translateX(50%)` (percentage from right edge)
+- Labels in RTL flex: `<span>0</span>` renders to the physical RIGHT, `<span>{maxScore}</span>` renders to the physical LEFT
 
 ### Scoring
 `lib/scoring.ts` — `calculateScore()` handles reversed items (e.g. PSS, RSES). `maxValue = answerOptions.length - 1`. Score ranges defined per-test in `TestConfig.scoreRanges`.
@@ -57,7 +70,7 @@ Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the foote
 
 ### OG image generation
 `app/opengraph-image.tsx` — homepage OG image (1200×630, dark green brand).
-`app/[test]/opengraph-image.tsx` — per-test OG image using Cairo font fetched from Google Fonts at edge runtime. Uses the `testsBySlug` map to look up name + icon.
+`app/[test]/opengraph-image.tsx` — per-test OG image using **Cairo** font fetched from Google Fonts at edge runtime (note: OG image still uses Cairo, not Tajawal — `next/og` image generation uses a separate font pipeline). Uses the `testsBySlug` map to look up name + icon.
 
 ### TestEngine props
 `components/TestEngine.tsx` accepts:
@@ -69,6 +82,13 @@ Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the foote
 Live pages served from `[test]` route:
 - `/عن-الموقع` → `components/AboutPage.tsx`
 - `/سياسة-الخصوصية` → `components/PrivacyPage.tsx`
+- `/اختبارات` → `components/AllTestsPage.tsx` (all-tests index; linked from header nav "الاختبارات")
+
+### MoodSelector
+`components/HomeMoodSection.tsx` / `components/MoodSelector.tsx` — **6 moods** (index order):
+0. بخير, 1. قَلِق, 2. حزين, 3. مرهَق, 4. **متوتر** (added), 5. متبلّد
+
+`MOOD_SLUGS` in `app/page.tsx` has 6 rows (one per mood). If you add/reorder moods, update both the moods array and `MOOD_SLUGS` in sync.
 
 ## Adding a new test
 1. Create `lib/tests/{id}.ts` exporting `{id}Config: TestConfig`
@@ -91,7 +111,7 @@ Live pages served from `[test]` route:
 | phq9 | PHQ-9 Depression | اختبار-الاكتئاب |
 | gad7 | GAD-7 Anxiety | اختبار-القلق |
 | pss | PSS-10 Stress | اختبار-التوتر |
-| burnout | Burnout | اختبار-الإرهاق-الوظيفي |
+| burnout | Burnout | اختبار-الإحتراق-الوظيفي |
 | ocir | OCI-R OCD | اختبار-الوسواس-القهري |
 | asrs5 | ASRS-5 ADHD | اختبار-ADHD-للبالغين |
 | pcl5 | PCL-5 PTSD | اختبار-الصدمة-النفسية |

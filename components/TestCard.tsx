@@ -1,45 +1,88 @@
 import Link from "next/link";
 import { TestConfig } from "@/lib/types";
 
-const categoryColors: Record<TestConfig["category"], string> = {
-  mood: "bg-purple-50 text-purple-700 border-purple-200",
-  anxiety: "bg-blue-50 text-blue-700 border-blue-200",
-  work: "bg-orange-50 text-orange-700 border-orange-200",
-  stress: "bg-green-50 text-green-700 border-green-200",
-  ocd: "bg-indigo-50 text-indigo-700 border-indigo-200",
+const categoryColorMap: Record<TestConfig["category"], string> = {
+  mood:        "var(--waaei-cat-depression)",
+  anxiety:     "var(--waaei-cat-anxiety)",
+  ocd:         "var(--waaei-cat-anxiety)",
+  work:        "var(--waaei-cat-stress)",
+  stress:      "var(--waaei-cat-stress)",
+  personality: "var(--waaei-cat-personality)",
 };
 
 const categoryLabel: Record<TestConfig["category"], string> = {
-  mood: "المزاج",
-  anxiety: "القلق",
-  work: "العمل",
-  stress: "التوتر",
-  ocd: "الوسواس",
+  mood:        "المزاج",
+  anxiety:     "القلق",
+  work:        "العمل",
+  stress:      "التوتر",
+  ocd:         "الوسواس",
+  personality: "الشخصية",
 };
 
 export function TestCard({ config }: { config: TestConfig }) {
+  const catColor = categoryColorMap[config.category];
+  const catLabel = categoryLabel[config.category];
+
   return (
-    <Link href={`/${config.slug}`}>
-      <div className="group bg-card border border-border rounded-2xl p-6 hover:border-sage-300 hover:shadow-md transition-all duration-200 flex flex-col gap-4 h-full cursor-pointer">
-        <div className="flex justify-between items-start">
-          <span className="text-4xl">{config.icon}</span>
+    <Link href={`/${config.slug}`} className="group block h-full">
+      <div
+        className="h-full flex flex-col cursor-pointer transition-all duration-[180ms] hover:-translate-y-0.5"
+        style={{
+          background: "var(--waaei-surface)",
+          borderRadius: "var(--waaei-radius-md)",
+          border: "1px solid var(--waaei-rule)",
+          padding: 14,
+          gap: 12,
+          minHeight: 130,
+          boxShadow: "var(--waaei-shadow-card)",
+        }}
+      >
+        {/* Top: emoji + category label */}
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
+          <span style={{ fontSize: 28, lineHeight: 1 }}>{config.icon}</span>
           <span
-            className={`text-xs px-2 py-1 rounded-full border font-medium ${categoryColors[config.category]}`}
+            style={{
+              fontSize: 11,
+              fontWeight: 600,
+              color: catColor,
+              background: catColor + "20",
+              padding: "2px 8px",
+              borderRadius: "var(--waaei-radius-pill)",
+              whiteSpace: "nowrap",
+            }}
           >
-            {categoryLabel[config.category]}
+            {catLabel}
           </span>
         </div>
-        <div className="flex flex-col gap-2">
-          <h2 className="text-xl font-bold text-foreground group-hover:text-sage-600 transition-colors">
+
+        {/* Name */}
+        <div style={{ flex: 1 }}>
+          <h2
+            style={{
+              fontSize: "var(--waaei-text-lg)",
+              fontWeight: 700,
+              color: "var(--waaei-ink)",
+              lineHeight: "var(--waaei-lh-snug)",
+            }}
+          >
             {config.name}
           </h2>
-          <p className="text-sm text-muted-foreground leading-relaxed">
-            {config.shortDescription}
-          </p>
         </div>
-        <div className="flex items-center gap-4 text-xs text-muted-foreground mt-auto pt-2 border-t border-border">
-          <span>⏱ {config.estimatedMinutes} دقائق</span>
-          <span>📋 {config.questions.length} أسئلة</span>
+
+        {/* Bottom: meta + chevron */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            paddingTop: 10,
+            borderTop: "1px solid var(--waaei-rule)",
+          }}
+        >
+          <span style={{ fontSize: 11, color: "var(--waaei-mute)" }}>
+            {config.estimatedMinutes} دقائق · {config.questions.length} أسئلة
+          </span>
+          <span style={{ color: "var(--waaei-mute)", fontSize: 14 }}>‹</span>
         </div>
       </div>
     </Link>

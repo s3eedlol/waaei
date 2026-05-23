@@ -31,7 +31,7 @@ export const contentType = "image/png";
 const testsBySlug: Record<string, TestConfig> = {
   "اختبار-الاكتئاب": phq9Config,
   "اختبار-القلق": gad7Config,
-  "اختبار-الإرهاق-الوظيفي": burnoutConfig,
+  "اختبار-الإحتراق-الوظيفي": burnoutConfig,
   "اختبار-التوتر": pssConfig,
   "اختبار-الوسواس-القهري": ocirConfig,
   "اختبار-ADHD-للبالغين": asrs5Config,

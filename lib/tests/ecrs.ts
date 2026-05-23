@@ -8,7 +8,7 @@ export const ecrsConfig: TestConfig = {
   longDescription:
     "يعتمد هذا الاختبار على مقياس ECR-S لأنماط التعلق في العلاقات العاطفية، المُتحقَّق منه في دراسات عربية متعددة. يكشف عن بُعدين: القلق في العلاقات (الخوف من الرفض) والتجنّب (صعوبة الاقتراب والاعتماد على الآخرين). أجب بناءً على علاقاتك العاطفية القريبة بشكل عام.",
   estimatedMinutes: 3,
-  category: "mood",
+  category: "personality",
   icon: "💝",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },

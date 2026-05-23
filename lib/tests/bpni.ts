@@ -8,7 +8,7 @@ export const bpniConfig: TestConfig = {
   longDescription:
     "يعتمد هذا الاختبار على مقياس PNI-16 للشخصية النرجسية، المُتحقَّق منه في بيئات عربية. يقيس نوعين من السمات النرجسية: النرجسية الظاهرة (الغرور والاستحقاق) والنرجسية الضعيفة (الحساسية للنقد والإحساس الخفي بالعظمة). النرجسية سمة طيف طبيعي — الجميع يمتلك قدراً منها.",
   estimatedMinutes: 4,
-  category: "mood",
+  category: "personality",
   icon: "🪞",
   answerOptions: [
     { label: "لا تنطبق عليّ أبداً", value: 0 },

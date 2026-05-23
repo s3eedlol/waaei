@@ -13,7 +13,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const testSlugs = [
     "اختبار-الاكتئاب",
     "اختبار-القلق",
-    "اختبار-الإرهاق-الوظيفي",
+    "اختبار-الإحتراق-الوظيفي",
     "اختبار-التوتر",
     "اختبار-الوسواس-القهري",
     "اختبار-ADHD-للبالغين",
@@ -48,6 +48,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: ABOUT_UPDATED,
       changeFrequency: "monthly" as const,
       priority: 0.6,
+    },
+    {
+      url: `${base}/اختبارات`,
+      lastModified: TESTS_UPDATED,
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
     },
     {
       url: `${base}/سياسة-الخصوصية`,

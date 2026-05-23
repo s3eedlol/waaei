@@ -30,7 +30,7 @@ export interface TestConfig {
   answerOptions: AnswerOption[];
   scoreRanges: ScoreRange[];
   disclaimer: string;
-  category: "mood" | "anxiety" | "work" | "stress" | "ocd";
+  category: "mood" | "anxiety" | "work" | "stress" | "ocd" | "personality";
   icon: string; // emoji used on cards
   affiliateUrl?: string;
   affiliateCta?: string;
