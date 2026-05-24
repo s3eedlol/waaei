@@ -451,10 +451,10 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
     const pad = 80;
     const barW = size - 2 * pad;
     const barH = 20;
-    const totalPossible = maxScore + 1;
 
     await document.fonts.load("800 32px Tajawal");
     await document.fonts.load("700 32px Tajawal");
+    await document.fonts.load("400 32px Tajawal");
 
     const canvas = document.createElement("canvas");
     canvas.width = size;
@@ -515,12 +515,13 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
     ctx.textAlign = "right";
     ctx.textBaseline = "top";
     ctx.fillText(String(finalScore), size - pad, scoreY);
+    const scoreNumeralWidth = ctx.measureText(String(finalScore)).width;
 
     // "/ maxScore" subscript
     ctx.fillStyle = "#6e7a70";
     ctx.font = "400 36px Tajawal";
     ctx.textBaseline = "top";
-    ctx.fillText(`/ ${maxScore}`, size - pad - 200, scoreY + 116);
+    ctx.fillText(`/ ${maxScore}`, size - pad - scoreNumeralWidth - 16, scoreY + 116);
 
     // ── "أعراض" label + colored severity word ──
     const labelY = scoreY + 184;
@@ -545,7 +546,7 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
       const isFirst = i === 0;
       const isLast = i === reversedRanges.length - 1;
       // roundRect radii order: [top-left, top-right, bottom-right, bottom-left]
-      ctx.roundRect(bx, barY, w - 2, barH, isFirst ? [4, 0, 0, 4] : isLast ? [0, 4, 4, 0] : 2);
+      ctx.roundRect(bx, barY, isLast ? w : w - 2, barH, isFirst ? [4, 0, 0, 4] : isLast ? [0, 4, 4, 0] : 2);
       ctx.fill();
       bx += w;
     });
