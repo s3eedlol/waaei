@@ -16,8 +16,16 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selected, setSelected] = useState<number | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [sharedScore, setSharedScore] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
+
+  // Cleanup copyTimer on unmount
+  useEffect(() => {
+    return () => {
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+    };
+  }, []);
 
   // Scroll overlay to top on each question advance
   useEffect(() => {
@@ -433,8 +441,9 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   function handleCopyLink() {
     navigator.clipboard.writeText(shareUrl).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+      if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+      copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {});
   }
 
   async function drawResultsCard(): Promise<Blob> {
@@ -450,23 +459,30 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
     const a = document.createElement("a");
     a.href = blobUrl;
     a.download = "نتائجي-واعي.png";
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(blobUrl);
   }
 
   async function handleShare() {
-    const blob = await drawResultsCard();
-    const file = new File([blob], "نتائجي-واعي.png", { type: "image/png" });
-    if (navigator.canShare?.({ files: [file] })) {
-      await navigator.share({
-        files: [file],
-        text: `نتائجي على واعي: ${scoreRange.label}`,
-        url: shareUrl,
-      });
-    } else {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
+    try {
+      const blob = await drawResultsCard();
+      const file = new File([blob], "نتائجي-واعي.png", { type: "image/png" });
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          text: `نتائجي على واعي: ${scoreRange.label}`,
+          url: shareUrl,
+        });
+      } else {
+        await navigator.clipboard.writeText(shareUrl).catch(() => {});
+        setCopied(true);
+        if (copyTimerRef.current) clearTimeout(copyTimerRef.current);
+        copyTimerRef.current = setTimeout(() => setCopied(false), 2000);
+      }
+    } catch {
+      // share cancelled or failed silently
     }
   }
 
