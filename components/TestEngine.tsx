@@ -428,6 +428,48 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   const currentBandColor = bandColor[scoreRange.severity] ?? "#9ec79f";
   const currentCatColor  = catColor[config.category] ?? "#5e7bbf";
 
+  const shareUrl = `${window.location.origin}/${config.slug}?score=${finalScore}`;
+
+  function handleCopyLink() {
+    navigator.clipboard.writeText(shareUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  async function drawResultsCard(): Promise<Blob> {
+    // Full implementation in Task 4
+    const c = document.createElement("canvas");
+    c.width = 1; c.height = 1;
+    return new Promise<Blob>((res) => c.toBlob((b) => res(b!), "image/png"));
+  }
+
+  async function handleDownload() {
+    const blob = await drawResultsCard();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = "نتائجي-واعي.png";
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  }
+
+  async function handleShare() {
+    const blob = await drawResultsCard();
+    const file = new File([blob], "نتائجي-واعي.png", { type: "image/png" });
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({
+        files: [file],
+        text: `نتائجي على واعي: ${scoreRange.label}`,
+        url: shareUrl,
+      });
+    } else {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  }
+
   return (
     <div
       style={{
@@ -570,6 +612,60 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
           <div style={{ borderTop: "1px solid var(--waaei-rule)", paddingTop: 16 }}>
             <div style={{ fontSize: 11, color: "var(--waaei-mute)", fontWeight: 700, letterSpacing: 1, marginBottom: 8 }}>ماذا تفعل الآن؟</div>
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.7, color: "var(--waaei-ink)" }}>{scoreRange.recommendation}</p>
+          </div>
+        </div>
+
+        {/* Share block */}
+        <div style={{ padding: "22px 22px 0", display: "flex", flexDirection: "column", gap: 10 }}>
+          <div style={{ fontSize: 11, color: "var(--waaei-mute)", fontWeight: 700, letterSpacing: 1 }}>
+            شارك نتائجك
+          </div>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              type="button"
+              onClick={handleDownload}
+              style={{
+                flex: 1, padding: "12px 4px",
+                background: "var(--waaei-surface)", color: "var(--waaei-ink)",
+                border: "1px solid var(--waaei-rule)", borderRadius: 12,
+                fontSize: 11, fontWeight: 700, cursor: "pointer",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+              }}
+            >
+              <span style={{ fontSize: 18 }}>⬇</span>
+              حفظ كصورة
+            </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              style={{
+                flex: 1, padding: "12px 4px",
+                background: "var(--waaei-surface)", color: "var(--waaei-ink)",
+                border: "1px solid var(--waaei-rule)", borderRadius: 12,
+                fontSize: 11, fontWeight: 700, cursor: "pointer",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+              }}
+            >
+              <span style={{ fontSize: 18 }}>↗</span>
+              مشاركة
+            </button>
+            <button
+              type="button"
+              onClick={handleCopyLink}
+              style={{
+                flex: 1, padding: "12px 4px",
+                background: copied ? "var(--waaei-ink)" : "var(--waaei-surface)",
+                color: copied ? "var(--waaei-bg)" : "var(--waaei-ink)",
+                border: copied ? "1px solid var(--waaei-ink)" : "1px solid var(--waaei-rule)",
+                borderRadius: 12,
+                fontSize: 11, fontWeight: 700, cursor: "pointer",
+                display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
+                transition: "all .2s",
+              }}
+            >
+              <span style={{ fontSize: 18 }}>{copied ? "✓" : "🔗"}</span>
+              {copied ? "تم النسخ" : "نسخ الرابط"}
+            </button>
           </div>
         </div>
 
