@@ -72,6 +72,22 @@ Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the foote
 `app/opengraph-image.tsx` — homepage OG image (1200×630, dark green brand).
 `app/[test]/opengraph-image.tsx` — per-test OG image using **Cairo** font fetched from Google Fonts at edge runtime (note: OG image still uses Cairo, not Tajawal — `next/og` image generation uses a separate font pipeline). Uses the `testsBySlug` map to look up name + icon.
 
+### Share / Save results feature
+After completing any test, a "شارك نتائجك" block appears between the scale visualization and related tests. Three buttons:
+
+- **حفظ كصورة** — downloads a 1080×1080 branded PNG card drawn via Canvas API (off-screen, never appended to DOM). Card contains: واعي logo tile, test name pill, score numeral, severity label, scale bar, full score-range legend (all bands with colored dots + score ranges), and waaei.me footer.
+- **مشاركة** — `navigator.share({files, url})` on mobile; falls back to clipboard copy on desktop.
+- **نسخ الرابط** — copies `origin/slug?score=N` to clipboard; button label flips to "تم النسخ ✓" for 2 s.
+
+**Shareable URL:** `?score=N` param is read on mount by a `useEffect([config])`. Valid score → jumps straight to results phase (`setPhase("results")`). Invalid/missing → normal test flow. Logic lives in `lib/parseScoreParam.ts`.
+
+**Canvas gotchas:**
+- `ctx.direction = "rtl"` for all Arabic text; temporarily switch to `ctx.direction = "ltr"` before drawing score-range numbers (e.g. "0 – 4") then restore, otherwise RTL context reverses the digits.
+- Font loaded via `document.fonts.load("800 32px Tajawal")` etc. — Canvas uses the already-loaded page font, not a separate fetch.
+- Canvas colors use hardcoded hex (not `var(--waaei-*)`) because Canvas API cannot resolve CSS custom properties.
+- Scale bar: `config.scoreRanges` is reversed before drawing so severe (red) is on the left, none (green) on the right, matching the RTL UI convention.
+- `copyTimerRef` (useRef) tracks the "تم النسخ" timer so it's cleared on unmount.
+
 ### TestEngine props
 `components/TestEngine.tsx` accepts:
 - `config: TestConfig` — required
