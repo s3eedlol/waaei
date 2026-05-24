@@ -25,13 +25,13 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   }, [phase, currentIndex]);
 
   useEffect(() => {
-    const max = totalQuestions * maxValue;
+    const max = config.questions.length * (config.answerOptions.length - 1);
     const parsed = parseScoreParam(window.location.search, max);
     if (parsed !== null) {
       setSharedScore(parsed);
       setPhase("results");
     }
-  }, []);
+  }, [config]);
 
   const question = config.questions[currentIndex];
   const totalQuestions = config.questions.length;
