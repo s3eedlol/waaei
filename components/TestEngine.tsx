@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { TestConfig } from "@/lib/types";
 import { calculateScore, getScoreRange } from "@/lib/scoring";
+import { parseScoreParam } from "@/lib/parseScoreParam";
 
 type Phase = "intro" | "test" | "results";
 
@@ -15,11 +16,22 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   const [answers, setAnswers] = useState<Record<number, number>>({});
   const [selected, setSelected] = useState<number | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
+  const [sharedScore, setSharedScore] = useState<number | null>(null);
+  const [copied, setCopied] = useState(false);
 
   // Scroll overlay to top on each question advance
   useEffect(() => {
     if (phase === "test") overlayRef.current?.scrollTo({ top: 0 });
   }, [phase, currentIndex]);
+
+  useEffect(() => {
+    const max = totalQuestions * maxValue;
+    const parsed = parseScoreParam(window.location.search, max);
+    if (parsed !== null) {
+      setSharedScore(parsed);
+      setPhase("results");
+    }
+  }, []);
 
   const question = config.questions[currentIndex];
   const totalQuestions = config.questions.length;
@@ -392,7 +404,7 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   }
 
   // ── RESULTS ───────────────────────────────────────────────────────────
-  const finalScore = calculateScore(answers, config.questions, maxValue);
+  const finalScore = sharedScore ?? calculateScore(answers, config.questions, maxValue);
   const scoreRange = getScoreRange(finalScore, config);
   const maxScore = totalQuestions * maxValue;
   const totalPossible = maxScore + 1; // number of possible values (0..maxScore)
