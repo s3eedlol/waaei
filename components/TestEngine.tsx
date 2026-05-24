@@ -577,6 +577,55 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
     ctx.closePath();
     ctx.fill();
 
+    // ── Score range legend ──
+    const legendStartY = barY + barH + 48;
+
+    // Separator rule
+    ctx.fillStyle = "rgba(31, 42, 35, 0.08)";
+    ctx.fillRect(pad, legendStartY - 20, barW, 1);
+
+    // Dynamic row height so all bands fit between here and the footer
+    const availH = (size - pad) - legendStartY - 60;
+    const rowH = Math.min(48, Math.floor(availH / config.scoreRanges.length));
+
+    config.scoreRanges.forEach((band, i) => {
+      const rowY = legendStartY + i * rowH;
+      const isActive = band.severity === scoreRange.severity;
+
+      // Active row tinted background
+      if (isActive) {
+        ctx.globalAlpha = 0.1;
+        ctx.fillStyle = bandColor[band.severity] ?? "#9ec79f";
+        ctx.beginPath();
+        ctx.roundRect(pad, rowY + 2, barW, rowH - 4, 8);
+        ctx.fill();
+      }
+      ctx.globalAlpha = isActive ? 1 : 0.45;
+
+      // Colored dot
+      ctx.fillStyle = bandColor[band.severity] ?? "#9ec79f";
+      ctx.beginPath();
+      ctx.arc(size - pad - 8, rowY + rowH / 2, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Band label (right-aligned)
+      ctx.fillStyle = "#1f2a23";
+      ctx.font = `${isActive ? 700 : 400} 19px Tajawal`;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(band.label, size - pad - 22, rowY + rowH / 2);
+
+      // Score range — force LTR so numbers don't reverse in RTL canvas
+      ctx.fillStyle = "#6e7a70";
+      ctx.font = "400 17px Tajawal";
+      ctx.direction = "ltr";
+      ctx.textAlign = "left";
+      ctx.fillText(`${band.min} – ${band.max}`, pad + 8, rowY + rowH / 2);
+      ctx.direction = "rtl";
+
+      ctx.globalAlpha = 1;
+    });
+
     // ── "waaei.me" domain at bottom center ──
     ctx.fillStyle = "#6e7a70";
     ctx.font = "400 26px Tajawal";
