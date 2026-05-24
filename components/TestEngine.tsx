@@ -447,10 +447,145 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
   }
 
   async function drawResultsCard(): Promise<Blob> {
-    // Full implementation in Task 4
-    const c = document.createElement("canvas");
-    c.width = 1; c.height = 1;
-    return new Promise<Blob>((res) => c.toBlob((b) => res(b!), "image/png"));
+    const size = 1080;
+    const pad = 80;
+    const barW = size - 2 * pad;
+    const barH = 20;
+    const totalPossible = maxScore + 1;
+
+    await document.fonts.load("800 32px Tajawal");
+    await document.fonts.load("700 32px Tajawal");
+
+    const canvas = document.createElement("canvas");
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext("2d")!;
+    ctx.direction = "rtl";
+
+    // Background
+    ctx.fillStyle = "#eef2ea";
+    ctx.fillRect(0, 0, size, size);
+
+    // ── Logo mark: dark-green rounded tile with "و" (top-right) ──
+    const tileSize = 56;
+    const tileX = size - pad - tileSize;
+    const tileY = pad;
+    ctx.fillStyle = "#1f2a23";
+    ctx.beginPath();
+    ctx.roundRect(tileX, tileY, tileSize, tileSize, 16);
+    ctx.fill();
+    ctx.fillStyle = "#eef2ea";
+    ctx.font = "700 30px Tajawal";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("و", tileX + tileSize / 2, tileY + tileSize / 2 + 2);
+
+    // ── "واعي" wordmark immediately left of tile ──
+    ctx.fillStyle = "#1f2a23";
+    ctx.font = "800 30px Tajawal";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText("واعي", tileX - 12, tileY + tileSize / 2);
+
+    // ── Category pill ──
+    const pillY = tileY + tileSize + 40;
+    ctx.font = "700 18px Tajawal";
+    const pillMetrics = ctx.measureText(config.name);
+    const pillPadH = 16;
+    const pillH = 36;
+    const pillW = pillMetrics.width + pillPadH * 2 + 20; // +20 for dot
+    ctx.fillStyle = `${currentCatColor}30`;
+    ctx.beginPath();
+    ctx.roundRect(size - pad - pillW, pillY, pillW, pillH, 18);
+    ctx.fill();
+    // Dot
+    ctx.fillStyle = currentCatColor;
+    ctx.beginPath();
+    ctx.arc(size - pad - 12, pillY + pillH / 2, 5, 0, Math.PI * 2);
+    ctx.fill();
+    // Pill text
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    ctx.fillText(config.name, size - pad - 26, pillY + pillH / 2);
+
+    // ── Big score numeral ──
+    const scoreY = pillY + pillH + 24;
+    ctx.fillStyle = "#1f2a23";
+    ctx.font = "800 160px Tajawal";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "top";
+    ctx.fillText(String(finalScore), size - pad, scoreY);
+
+    // "/ maxScore" subscript
+    ctx.fillStyle = "#6e7a70";
+    ctx.font = "400 36px Tajawal";
+    ctx.textBaseline = "top";
+    ctx.fillText(`/ ${maxScore}`, size - pad - 200, scoreY + 116);
+
+    // ── "أعراض" label + colored severity word ──
+    const labelY = scoreY + 184;
+    ctx.fillStyle = "#1f2a23";
+    ctx.font = "700 26px Tajawal";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "top";
+    ctx.fillText("أعراض", size - pad, labelY);
+    ctx.fillStyle = currentBandColor;
+    ctx.font = "800 52px Tajawal";
+    ctx.fillText(scoreRange.label, size - pad, labelY + 34);
+
+    // ── Scale bar (RTL: severe=left, none=right) ──
+    const barY = labelY + 120;
+    const reversedRanges = [...config.scoreRanges].reverse(); // severe first → leftmost
+    let bx = pad;
+    reversedRanges.forEach((band, i) => {
+      const w = Math.floor(((band.max - band.min + 1) / totalPossible) * barW);
+      ctx.globalAlpha = band.severity === scoreRange.severity ? 1 : 0.35;
+      ctx.fillStyle = bandColor[band.severity] ?? "#9ec79f";
+      ctx.beginPath();
+      const isFirst = i === 0;
+      const isLast = i === reversedRanges.length - 1;
+      // roundRect radii order: [top-left, top-right, bottom-right, bottom-left]
+      ctx.roundRect(bx, barY, w - 2, barH, isFirst ? [4, 0, 0, 4] : isLast ? [0, 4, 4, 0] : 2);
+      ctx.fill();
+      bx += w;
+    });
+    ctx.globalAlpha = 1;
+
+    // ── "أنت" chip + arrow (clamped so chip never goes off-canvas) ──
+    const chipW = 52;
+    const chipH = 26;
+    // RTL: score=0 → right edge (x = size-pad), score=maxScore → left edge (x = pad)
+    const rawMarkerX = Math.round((size - pad) - (finalScore / maxScore) * barW);
+    const markerX = Math.max(pad + chipW / 2, Math.min(size - pad - chipW / 2, rawMarkerX));
+    const chipY = barY - chipH - 8;
+    ctx.fillStyle = "#1f2a23";
+    ctx.beginPath();
+    ctx.roundRect(markerX - chipW / 2, chipY, chipW, chipH, 6);
+    ctx.fill();
+    ctx.fillStyle = "#eef2ea";
+    ctx.font = "700 18px Tajawal";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("أنت", markerX, chipY + chipH / 2);
+    // Arrow pointing down into bar
+    ctx.fillStyle = "#1f2a23";
+    ctx.beginPath();
+    ctx.moveTo(markerX - 5, barY - 1);
+    ctx.lineTo(markerX + 5, barY - 1);
+    ctx.lineTo(markerX, barY + 6);
+    ctx.closePath();
+    ctx.fill();
+
+    // ── "waaei.me" domain at bottom center ──
+    ctx.fillStyle = "#6e7a70";
+    ctx.font = "400 26px Tajawal";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "bottom";
+    ctx.fillText("waaei.me", size / 2, size - pad);
+
+    return new Promise<Blob>((resolve, reject) =>
+      canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("canvas.toBlob failed"))), "image/png")
+    );
   }
 
   async function handleDownload() {
