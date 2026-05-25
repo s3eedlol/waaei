@@ -31,7 +31,9 @@ import { ptgiConfig } from "@/lib/tests/ptgi";
 import { auditcConfig } from "@/lib/tests/auditc";
 import { TestConfig } from "@/lib/types";
 
-export const dynamic = "force-dynamic";
+// Note: previously `export const dynamic = "force-dynamic"` — removed May 2026
+// because test pages are static content (no per-request data). Letting Next.js
+// statically generate them is faster + better for SEO. Do NOT add it back.
 
 const testsBySlug: Record<string, TestConfig> = {
   "اختبار-الاكتئاب": phq9Config,
@@ -259,7 +261,13 @@ const relatedBySlug: Record<string, string[]> = {
   "اختبار-أنماط-الاستهلاك":         ["اختبار-التوتر", "اختبار-الإحتراق-الوظيفي", "اختبار-الاكتئاب"],
 };
 
+// Bump TEST_CONTENT_UPDATED when test content, scoring, or interpretation changes.
+// Used for `dateModified` + `lastReviewed` in the MedicalWebPage schema —
+// signals to Google/YMYL crawlers that content is actively maintained.
+const TEST_CONTENT_UPDATED = "2026-05-22";
+
 function buildTestSchema(slug: string, meta: { title: string; description: string }) {
+  const source = sourceBySlug[slug];
   return {
     "@context": "https://schema.org",
     "@type": "MedicalWebPage",
@@ -270,6 +278,18 @@ function buildTestSchema(slug: string, meta: { title: string; description: strin
     about: conditionBySlug[slug],
     audience: { "@type": "MedicalAudience", audienceType: "Patient" },
     publisher: { "@type": "Organization", name: "واعي", url: "https://waaei.me" },
+    dateModified: TEST_CONTENT_UPDATED,
+    lastReviewed: TEST_CONTENT_UPDATED,
+    ...(source
+      ? {
+          citation: {
+            "@type": "ScholarlyArticle",
+            name: source.scale,
+            author: source.authors,
+            url: source.url,
+          },
+        }
+      : {}),
   };
 }
 

@@ -58,6 +58,14 @@ Arabic-named directories under `app/` break the build in two ways:
 ## SEO architecture — data maps in `app/[test]/page.tsx`
 All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When adding a new test, update all five maps:
 
+**Rendering note (May 2026):** Do NOT add `export const dynamic = "force-dynamic"` to this file. Test pages are static content — letting Next.js statically generate them at build time is faster, better for SEO, and avoids unnecessary server load. A comment in the file marks this. Earlier versions had `force-dynamic` which disabled SSG for all 23 tests; that was removed.
+
+**MedicalWebPage schema enrichment (May 2026):** `buildTestSchema` now emits:
+- `citation` — ScholarlyArticle pulled from `sourceBySlug` (PubMed/WHO link + scale name + authors). Tells Google/YMYL crawlers the test is grounded in published research.
+- `dateModified` + `lastReviewed` — driven by the `TEST_CONTENT_UPDATED` constant at the top of the file.
+**When you change test content, scoring, or interpretation, bump `TEST_CONTENT_UPDATED`** — that single constant updates schema dates across all 23 tests. (Sitemap dates are separate in `app/sitemap.ts`; bump both together for consistency.)
+
+
 | Map | Purpose |
 |-----|---------|
 | `testsBySlug` | Slug → TestConfig (routing) |
