@@ -66,6 +66,12 @@ export function Header() {
             الاختبارات
           </Link>
           <Link
+            href="/مقالات"
+            style={{ color: "var(--waaei-mute)", textDecoration: "none" }}
+          >
+            المقالات
+          </Link>
+          <Link
             href="/عن-الموقع"
             style={{ color: "var(--waaei-mute)", textDecoration: "none" }}
           >
