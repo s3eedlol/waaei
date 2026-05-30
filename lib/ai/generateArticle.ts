@@ -151,8 +151,23 @@ export async function generateAndSaveArticle(
     throw new Error(`Claude API call failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 
-  const content = response.content[0].type === "text" ? response.content[0].text.trim() : "";
+  let content = response.content[0].type === "text" ? response.content[0].text.trim() : "";
   if (!content) throw new Error("Empty response from Claude");
+
+  // Ensure <!-- CTA --> marker is present — Claude sometimes strips HTML comments.
+  // Fallback: insert it after the second ## heading if missing.
+  if (!content.includes("<!-- CTA -->")) {
+    const headingMatches = [...content.matchAll(/^## .+/gm)];
+    if (headingMatches.length >= 2) {
+      const secondHeading = headingMatches[1];
+      const insertAt = (secondHeading.index ?? 0) + secondHeading[0].length;
+      // Find the end of the second section (start of third ## heading or end of content)
+      const thirdHeading = headingMatches[2];
+      const sectionEnd = thirdHeading ? (thirdHeading.index ?? content.length) : content.length;
+      // Insert after the second section's content
+      content = content.slice(0, sectionEnd) + "\n\n<!-- CTA -->\n\n" + content.slice(sectionEnd);
+    }
+  }
 
   const wordCount = content.split(/\s+/).length;
   const reading_minutes = Math.max(3, Math.ceil(wordCount / 200));
