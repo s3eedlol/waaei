@@ -1,3 +1,4 @@
+import "server-only";
 import Anthropic from "@anthropic-ai/sdk";
 import { saveArticle } from "@/lib/supabase/articles";
 import { supabase } from "@/lib/supabase/client";
@@ -66,7 +67,7 @@ async function getExistingArticles(): Promise<{ slug: string }[]> {
   }
 }
 
-async function pickUnusedTopic(offset = 0): Promise<{ topic: Topic; index: number }> {
+async function pickUnusedTopic(offset = 0): Promise<{ topic: Topic; index: number } | null> {
   const existing = await getExistingArticles();
   const existingSlugs = new Set(existing.map((a) => a.slug));
 
@@ -81,25 +82,28 @@ async function pickUnusedTopic(offset = 0): Promise<{ topic: Topic; index: numbe
     }
   }
 
-  // All topics covered — cycle from start
-  const idx = (dayIndex + offset) % TOPICS.length;
-  return { topic: TOPICS[idx], index: idx };
+  return null; // All topics already generated
 }
 
 export async function generateAndSaveArticle(
   client?: Anthropic,
   topicOffset = 0
-): Promise<string> {
+): Promise<string | null> {
   const _client = client ?? new Anthropic();
-  const { topic } = await pickUnusedTopic(topicOffset);
+  const result = await pickUnusedTopic(topicOffset);
+  if (!result) return null; // All topics already generated
 
-  const response = await _client.messages.create({
-    model: "claude-sonnet-4-6",
-    max_tokens: 6000,
-    messages: [
-      {
-        role: "user",
-        content: `أنت كاتب متخصص في الصحة النفسية لموقع واعي (waaei.me) — منصة عربية للتوعية النفسية.
+  const { topic } = result;
+
+  let response;
+  try {
+    response = await _client.messages.create({
+      model: "claude-sonnet-4-6",
+      max_tokens: 6000,
+      messages: [
+        {
+          role: "user",
+          content: `أنت كاتب متخصص في الصحة النفسية لموقع واعي (waaei.me) — منصة عربية للتوعية النفسية.
 
 اكتب مقالاً تثقيفياً متعمقاً بالعربية عن هذا الموضوع:
 "${topic.topicHint}"
@@ -140,9 +144,12 @@ export async function generateAndSaveArticle(
 - الطول المستهدف: 700-900 كلمة في المحتوى (بدون المصادر)
 
 أعد فقط الماركداون بدون أي شرح أو تعليق إضافي.`,
-      },
-    ],
-  });
+        },
+      ],
+    });
+  } catch (e) {
+    throw new Error(`Claude API call failed: ${e instanceof Error ? e.message : String(e)}`);
+  }
 
   const content = response.content[0].type === "text" ? response.content[0].text.trim() : "";
   if (!content) throw new Error("Empty response from Claude");
