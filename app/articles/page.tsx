@@ -104,7 +104,7 @@ export default async function ArticlesHubPage() {
                         {article.meta_description}
                       </div>
                       <div style={{ fontSize: 10, color: "var(--waaei-mute)" }}>
-                        {article.reading_minutes} دقائق للقراءة
+                        {article.reading_minutes} {article.reading_minutes === 1 ? "دقيقة" : article.reading_minutes === 2 ? "دقيقتان" : "دقائق"} للقراءة
                       </div>
                     </div>
                   </Link>
