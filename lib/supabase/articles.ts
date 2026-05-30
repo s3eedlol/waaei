@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { unstable_cache, revalidateTag } from "next/cache";
 import { supabase } from "./client";
 
 export type Article = {
@@ -14,7 +14,7 @@ export type Article = {
   related_test_minutes: number;
   reading_minutes: number;
   status: "draft" | "published";
-  published_at: string;
+  published_at: string | null;
   created_at: string;
 };
 
@@ -32,7 +32,7 @@ function rowToArticle(row: Record<string, unknown>): Article {
     related_test_minutes: row.related_test_minutes as number,
     reading_minutes:     row.reading_minutes as number,
     status:              row.status as "draft" | "published",
-    published_at:        row.published_at as string,
+    published_at:        row.published_at as string | null,
     created_at:          row.created_at as string,
   };
 }
@@ -70,13 +70,13 @@ async function _getArticleBySlug(slug: string): Promise<Article | null> {
 export const getPublishedArticles = unstable_cache(
   _getPublishedArticles,
   ["published-articles"],
-  { revalidate: 3600 }
+  { revalidate: 3600, tags: ["published-articles"] }
 );
 
 export const getArticleBySlug = unstable_cache(
   _getArticleBySlug,
   ["article-by-slug"],
-  { revalidate: 3600 }
+  { revalidate: 3600, tags: ["article-by-slug"] }
 );
 
 export async function getDraftArticles(): Promise<Article[]> {
@@ -97,9 +97,11 @@ export async function getDraftArticles(): Promise<Article[]> {
 export async function approveArticle(id: string): Promise<void> {
   const { error } = await supabase
     .from("articles")
-    .update({ status: "published" })
+    .update({ status: "published", published_at: new Date().toISOString() })
     .eq("id", id);
   if (error) throw new Error(`Supabase update failed: ${error.message}`);
+  revalidateTag("published-articles", {});
+  revalidateTag("article-by-slug", {});
 }
 
 export async function deleteArticle(id: string): Promise<void> {
@@ -108,6 +110,8 @@ export async function deleteArticle(id: string): Promise<void> {
     .delete()
     .eq("id", id);
   if (error) throw new Error(`Supabase delete failed: ${error.message}`);
+  revalidateTag("published-articles", {});
+  revalidateTag("article-by-slug", {});
 }
 
 export async function saveArticle(
