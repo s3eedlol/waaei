@@ -196,22 +196,23 @@ Cards are `<a>` tags linking to `/مقالات/[slug]`. Equal card height in a r
 
 ### Access protection
 
-The page checks the `key` query param against the `REVIEW_KEY` environment variable:
+A password login form. On submit, a server action checks the entered password against the `REVIEW_PASSWORD` environment variable. On success, sets an HttpOnly cookie `review_auth` (7-day expiry) and redirects back to `/review`. Subsequent visits read the cookie — no re-entry needed until it expires.
 
-```ts
-// app/review/page.tsx (server component)
-import { redirect } from "next/navigation";
+**Files:**
+- `app/review/page.tsx` — server component; reads cookie, shows login form or review content
+- `app/review/actions.ts` — server action `submitReviewPassword(formData)`: validates password, sets cookie via `cookies().set()`
+- `app/review/logout/route.ts` — GET route that clears the cookie and redirects to `/review` (for logout)
 
-export default function ReviewPage({ searchParams }: { searchParams: { key?: string } }) {
-  if (searchParams.key !== process.env.REVIEW_KEY) redirect("/");
-  // ... render review UI
-}
-```
+**Environment variable:**
+- Name: `REVIEW_PASSWORD`
+- Set in Vercel dashboard → Settings → Environment Variables (Production + Preview)
+- Never hardcoded in source — the actual value is known only to the operator
 
-- Set `REVIEW_KEY` in Vercel dashboard → Settings → Environment Variables (Production + Preview)
-- Access via `https://waaei.me/review?key=YOUR_KEY`
-- Without the correct key the page silently redirects to `/`
-- `REVIEW_KEY` is never exposed to the client (server component only)
+**Security properties:**
+- Cookie is HttpOnly + SameSite=Strict — not readable by client JS
+- Wrong password: form re-renders with "كلمة المرور غير صحيحة"
+- No username needed — password only
+- `/review` is never linked from the site nav or sitemap
 
 ### Page layout
 
