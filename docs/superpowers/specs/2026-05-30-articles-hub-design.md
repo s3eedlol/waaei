@@ -72,6 +72,7 @@ export type Article = {
     heading: string;
     body: string;            // Plain Arabic text; paragraphs separated by \n\n
   }[];
+  status: "draft" | "published";  // draft = hidden from hub + sitemap; published = live
   relatedArticleSlugs: string[]; // 2 slugs shown in "اقرأ أيضاً" at article bottom
   sources: {
     label: string; // e.g. "منظمة الصحة العالمية — تصنيف الاضطرابات النفسية"
@@ -109,6 +110,8 @@ export type Article = {
 4. Read time in minutes (muted)
 
 Cards are `<a>` tags linking to `/مقالات/[slug]`. Equal card height in a row via `flex-direction: column` + `flex: 1` on the description.
+
+**Draft filtering:** Hub index only renders articles where `status === "published"`. Draft articles are invisible to visitors and excluded from the sitemap.
 
 **Metadata:**
 - `title`: "مقالات الصحة النفسية | واعي"
@@ -183,11 +186,55 @@ Cards are `<a>` tags linking to `/مقالات/[slug]`. Equal card height in a r
 }
 ```
 
+---
+
+## Review Page (`/review`)
+
+**Component:** `app/review/page.tsx` — Latin directory, no routing issue. Not linked anywhere in the site nav.
+
+**Purpose:** Lets the operator read full article drafts and decide which to publish, without leaving the browser.
+
+### Access protection
+
+The page checks the `key` query param against the `REVIEW_KEY` environment variable:
+
+```ts
+// app/review/page.tsx (server component)
+import { redirect } from "next/navigation";
+
+export default function ReviewPage({ searchParams }: { searchParams: { key?: string } }) {
+  if (searchParams.key !== process.env.REVIEW_KEY) redirect("/");
+  // ... render review UI
+}
+```
+
+- Set `REVIEW_KEY` in Vercel dashboard → Settings → Environment Variables (Production + Preview)
+- Access via `https://waaei.me/review?key=YOUR_KEY`
+- Without the correct key the page silently redirects to `/`
+- `REVIEW_KEY` is never exposed to the client (server component only)
+
+### Page layout
+
+- Lists **all articles** regardless of status, sorted: drafts first, then published
+- Each article renders in full — same structure as the article page (title, intro, all sections, sources) so the reading experience is identical to what visitors will see
+- A status badge at the top of each article: **"مسودة"** (amber) or **"منشور"** (green)
+- A small code hint below the badge for drafts:
+  ```
+  للنشر: غيّر status: "draft" إلى status: "published" في lib/articles/[file].ts
+  ```
+- No approve button — approval is a deliberate code change (`status: "draft"` → `status: "published"`) which triggers a Vercel redeploy via git push
+
+### Why no approve button
+
+A button would require an API route and write access to the filesystem or a database. Since articles live in TypeScript files and the site deploys from git, a code change is the natural approval gate — it goes through version history and triggers the same deploy pipeline as everything else.
+
+---
+
 ### Sitemap (`app/sitemap.ts`)
 
-Add `ARTICLES_UPDATED` date constant. Add entries:
+Add `ARTICLES_UPDATED` date constant. Add entries for **published articles only** (`status === "published"`):
 - `/مقالات` — `changeFrequency: "monthly"`, `priority: 0.7`
-- Each article slug — `changeFrequency: "monthly"`, `priority: 0.8`
+- Each published article slug — `changeFrequency: "monthly"`, `priority: 0.8`
 
 ---
 
