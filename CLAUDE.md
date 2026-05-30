@@ -22,7 +22,7 @@
 - `@vercel/analytics` — `<Analytics />` mounted in `app/layout.tsx` for page-view tracking
 - `app/icon.png` — custom واعي app icon (dark green rounded square); Next.js App Router picks it up automatically as the favicon. Source file in `logo/`.
 - **Header logo** is **code-generated** in `components/Header.tsx` — no image file. An ink-filled 32×32 rounded square tile (borderRadius 9, `background: var(--waaei-ink)`) with the letter "و" centered in `var(--waaei-bg)` color, followed by the "واعي" wordmark (18px, 800 weight, `color: var(--waaei-ink)`). No separate LogoMark component — rendered inline in the header.
-- Header nav has **3 links**: الاختبارات → `/اختبارات` (ink color, active), عن الموقع → `/عن-الموقع` (mute), الخصوصية → `/سياسة-الخصوصية` (mute)
+- Header nav has **4 links**: الاختبارات → `/اختبارات` (ink color, active), المقالات → `/مقالات` (mute), عن الموقع → `/عن-الموقع` (mute), الخصوصية → `/سياسة-الخصوصية` (mute)
 - `app/layout.tsx` includes a global Organization JSON-LD `<script>` (واعي → parentOrg Emdash) via `dangerouslySetInnerHTML`.
 - `components/AboutPage.tsx` — about page component served at `/عن-الموقع` via the `[test]` dynamic route. Has its own Emdash+واعي Organization JSON-LD.
 - **Design tokens:** All brand colors and spacing live in `--waaei-*` CSS custom properties in `app/globals.css` (e.g. `--waaei-ink`, `--waaei-bg`, `--waaei-surface`, `--waaei-mute`, `--waaei-rule`, `--waaei-cat-depression`, etc.). Use `var(--waaei-*)` in inline styles — not hardcoded `oklch()` values for brand colors.
