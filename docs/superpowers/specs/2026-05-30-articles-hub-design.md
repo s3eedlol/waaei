@@ -73,6 +73,10 @@ export type Article = {
     body: string;            // Plain Arabic text; paragraphs separated by \n\n
   }[];
   relatedArticleSlugs: string[]; // 2 slugs shown in "اقرأ أيضاً" at article bottom
+  sources: {
+    label: string; // e.g. "منظمة الصحة العالمية — تصنيف الاضطرابات النفسية"
+    url: string;   // PubMed, WHO, APA, or other authoritative source
+  }[];
 };
 ```
 
@@ -130,8 +134,9 @@ Cards are `<a>` tags linking to `/مقالات/[slug]`. Equal card height in a r
 8. **CTA card** — dark green card (`var(--waaei-ink)` bg): "هل تتعرف على هذه الأعراض؟" + test name/scale/duration + "اكتشف مستواك ←" button linking to `/{relatedTestSlug}`
 9. **Remaining sections** continue after the CTA
 10. **Divider**
-11. **"اقرأ أيضاً"** — 2 article link cards from `relatedArticleSlugs`
-12. **Footer** (shared)
+11. **"المصادر"** — numbered list of `article.sources`, each a labelled external link (opens in new tab). Styled as small muted text, consistent with the clinical attribution already shown on test pages.
+12. **"اقرأ أيضاً"** — 2 article link cards from `relatedArticleSlugs`
+13. **Footer** (shared)
 
 **Static generation:** `generateStaticParams()` returns all article slugs. Do NOT add `force-dynamic`. Pages are fully static.
 
@@ -196,6 +201,30 @@ Add `ARTICLES_UPDATED` date constant. Add entries:
 | المقالات | `/مقالات` | mute colour ← new |
 | عن الموقع | `/عن-الموقع` | mute colour |
 | الخصوصية | `/سياسة-الخصوصية` | mute colour |
+
+---
+
+## Writing Guidelines — Tone & Voice
+
+Articles are AI-drafted then reviewed and edited by the operator before publishing. The review pass must ensure the article meets these standards:
+
+**Voice:**
+- Conversational and direct — write to a single person ("قد تشعر", "ربما لاحظت"), not to a generic audience ("يشعر الأشخاص المصابون...")
+- Use contractions and natural Arabic phrasing, not formal Modern Standard Arabic. The site targets GCC + Egypt so avoid overly formal structures.
+- Short sentences. If a sentence has more than one comma, break it in two.
+- No throat-clearing openers ("في هذا المقال سنتناول..."). Start with the point.
+
+**What to remove in review:**
+- Lists of 7+ bullet points — real writers use prose
+- Symmetrical paragraph length — AI tends to write perfectly equal paragraphs; vary them
+- Hedging every claim ("قد", "ربما", "من المحتمل") more than once per section
+- Generic closing paragraphs that just restate the intro
+- The word "شامل" (comprehensive) — overused in AI health content
+
+**What sources to cite:**
+- Each article must have at least 2 sources from: WHO, APA, PubMed, or a recognised national psychiatric association
+- Sources must directly support a specific claim in the article, not just be topically related
+- Prefer Arabic-language sources where they exist (e.g. Arab Federation of Psychiatrists) for regional credibility
 
 ---
 
