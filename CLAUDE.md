@@ -129,6 +129,37 @@ Live pages served from `[test]` route:
 4. Add the URL to `app/sitemap.ts`
 **Never create Arabic-named directories under `app/` — see routing constraint above.**
 
+## Articles hub (`/مقالات`) — AI-generated educational content
+
+Daily AI-generated Arabic mental health articles, Supabase-backed, with a draft → review → publish pipeline. Modeled on the dahabpulse pipeline.
+
+### Architecture
+- **Supabase project: `waaei`** (project ID `rvvvqkqcyattuvwpmkzg`, region eu-central-1). Single `articles` table — id (uuid PK), slug (unique), title, meta_description, content (markdown), category, related_test_slug/name/scale/minutes, reading_minutes, status (`draft`|`published`), published_at, created_at. RLS enabled, no policies — the **service-role key bypasses RLS** and is server-only.
+- **`lib/supabase/client.ts`** — service-role client (`import "server-only"` guard). Reads `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY`.
+- **`lib/supabase/articles.ts`** — DB layer. `getPublishedArticles` + `getArticleBySlug` are wrapped in `unstable_cache` (revalidate 3600, tags `published-articles` / `article-by-slug`). `approveArticle`/`deleteArticle` call `revalidateTag(tag, { expire: 0 })` for immediate invalidation and `approveArticle` stamps `published_at`. `getDraftArticles` is uncached.
+- **`lib/ai/generateArticle.ts`** — 26-topic Arabic mental-health pool (one+ per test). `pickUnusedTopic` does day-of-year rotation and skips slugs already in the DB (returns `null` when all 26 are used). `generateAndSaveArticle` calls Claude (`claude-sonnet-4-6`), saves as `draft` with `published_at: null`. **CTA marker:** Claude often strips the `<!-- CTA -->` HTML comment, so there's a post-processing fallback that re-inserts it after the second `##` section.
+- **`app/api/cron/generate-article/route.ts`** — GET endpoint, auth via `Bearer ${CRON_SECRET}` (fails closed if the env var is missing). Returns 200 + `articleId:null` when all topics are used, 500 on generation error.
+- **`vercel.json`** — cron `0 2 * * *` (2am UTC daily), `maxDuration: 300` for the cron route.
+
+### Routing — Arabic URL via rewrites (CRITICAL)
+Arabic-named dirs under `app/` break the build (see routing constraint). The hub lives in the Latin dir `app/articles/` and is exposed at `/مقالات` via rewrites in `next.config.ts`. **Next.js 16 matches `rewrites` `source` against the percent-encoded path**, so the source MUST be percent-encoded, not raw Arabic:
+```ts
+{ source: "/%D9%85%D9%82%D8%A7%D9%84%D8%A7%D8%AA", destination: "/articles" }
+{ source: "/%D9%85%D9%82%D8%A7%D9%84%D8%A7%D8%AA/:path*", destination: "/articles/:path*" }
+```
+Raw Arabic sources silently 404. Canonical/OG URLs still use the raw Arabic form (`/مقالات/slug`).
+
+### Pages
+- **`app/articles/page.tsx`** — hub index at `/مقالات`. 2-col mobile / 3-col desktop card grid of published articles (category pill, title, description, read time). Empty state: "لا توجد مقالات منشورة بعد."
+- **`app/articles/[slug]/page.tsx`** — article page. `react-markdown` + `remark-gfm`. Splits `content` at `<!-- CTA -->` (via `indexOf`, first-occurrence only) and injects a dark CTA card (`var(--waaei-ink)` bg) linking to the related test. `generateStaticParams` from published articles. Article JSON-LD. `notFound()` for drafts (also guarded in `generateMetadata` so drafts never leak title/desc).
+- **`app/review/page.tsx`** — operator-only at `/review`, NOT linked in nav. Password login → server action checks `REVIEW_PASSWORD` → sets `review_auth` HttpOnly+SameSite=strict cookie (7-day, `secure` in prod). Shows all articles (drafts first), full markdown render, **نشر ✓** (approve) and **حذف** (delete) buttons. `app/review/actions.ts` server actions re-check the cookie independently (the page gate is not enough — server actions are directly callable). `app/review/logout/route.ts` clears the cookie.
+
+### Env vars (Vercel)
+`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (Prod+Dev), `ANTHROPIC_API_KEY`, `REVIEW_PASSWORD`, `CRON_SECRET` (Prod). Sensitive vars can't be added to the Development environment — use `.env.local` for local dev. `vercel env add ... preview` stalls on CLI v54 (asks for a git branch); single-branch project so preview env isn't needed.
+
+### Daily flow
+Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operator visits `/review`, reads it, clicks نشر ✓ → `status: published` + cache invalidated → live on `/مقالات` immediately. To add topics, extend the `TOPICS` array in `lib/ai/generateArticle.ts`.
+
 ## Test inventory (23 total)
 | File | Scale | Slug |
 |------|-------|------|
