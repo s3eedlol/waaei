@@ -100,8 +100,8 @@ export async function approveArticle(id: string): Promise<void> {
     .update({ status: "published", published_at: new Date().toISOString() })
     .eq("id", id);
   if (error) throw new Error(`Supabase update failed: ${error.message}`);
-  revalidateTag("published-articles", {});
-  revalidateTag("article-by-slug", {});
+  revalidateTag("published-articles", { expire: 0 });
+  revalidateTag("article-by-slug", { expire: 0 });
 }
 
 export async function deleteArticle(id: string): Promise<void> {
@@ -110,8 +110,8 @@ export async function deleteArticle(id: string): Promise<void> {
     .delete()
     .eq("id", id);
   if (error) throw new Error(`Supabase delete failed: ${error.message}`);
-  revalidateTag("published-articles", {});
-  revalidateTag("article-by-slug", {});
+  revalidateTag("published-articles", { expire: 0 });
+  revalidateTag("article-by-slug", { expire: 0 });
 }
 
 export async function saveArticle(
