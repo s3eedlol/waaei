@@ -17,7 +17,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const article = await getArticleBySlug(decodeURIComponent(slug));
-  if (!article) return {};
+  if (!article || article.status !== "published") return {};
   return {
     title: article.title,
     description: article.meta_description,
@@ -82,13 +82,16 @@ export default async function ArticlePage({ params }: Props) {
     headline: article.title,
     inLanguage: "ar",
     url: `https://waaei.me/مقالات/${article.slug}`,
-    datePublished: article.published_at,
+    datePublished: article.published_at ?? undefined,
     publisher: { "@type": "Organization", name: "واعي", url: "https://waaei.me" },
     about: { "@type": "MedicalCondition", name: article.category },
   };
 
   const catColor = CATEGORY_COLOR[article.category] ?? "#5e7bbf";
-  const [beforeCTA, afterCTA] = article.content.split("<!-- CTA -->");
+  const CTA_MARKER = "<!-- CTA -->";
+  const ctaIdx = article.content.indexOf(CTA_MARKER);
+  const beforeCTA = ctaIdx === -1 ? null : article.content.slice(0, ctaIdx);
+  const afterCTA  = ctaIdx === -1 ? null : article.content.slice(ctaIdx + CTA_MARKER.length);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -139,11 +142,11 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Content before CTA */}
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-            {beforeCTA ?? article.content}
+            {beforeCTA !== null ? beforeCTA : article.content}
           </ReactMarkdown>
 
           {/* CTA card — only shown if <!-- CTA --> marker exists */}
-          {afterCTA !== undefined && (
+          {afterCTA !== null && (
             <div
               style={{
                 background: "var(--waaei-ink)",
@@ -161,8 +164,8 @@ export default async function ArticlePage({ params }: Props) {
                 <div style={{ color: "var(--waaei-bg)", fontSize: 14, fontWeight: 700 }}>
                   هل تتعرف على هذه الأعراض؟
                 </div>
-                <div style={{ color: "var(--waaei-mute)", fontSize: 12 }}>
-                  {article.related_test_name} · {article.related_test_scale} · {article.related_test_minutes} دقائق · مجاني وسري
+                <div style={{ color: "var(--waaei-bg)", fontSize: 12, opacity: 0.7 }}>
+                  {article.related_test_name} · {article.related_test_scale} · {article.related_test_minutes} {article.related_test_minutes === 1 ? "دقيقة" : article.related_test_minutes === 2 ? "دقيقتان" : "دقائق"} · مجاني وسري
                 </div>
               </div>
               <Link
@@ -185,7 +188,7 @@ export default async function ArticlePage({ params }: Props) {
           )}
 
           {/* Content after CTA */}
-          {afterCTA !== undefined && (
+          {afterCTA !== null && (
             <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
               {afterCTA}
             </ReactMarkdown>
