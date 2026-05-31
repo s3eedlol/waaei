@@ -293,14 +293,82 @@ function buildTestSchema(slug: string, meta: { title: string; description: strin
   };
 }
 
-function buildFAQItems(config: TestConfig) {
-  const firstRange = config.scoreRanges[0]?.label ?? "منخفضة";
-  const lastRange = config.scoreRanges[config.scoreRanges.length - 1]?.label ?? "مرتفعة";
+const severityColorMap: Record<string, string> = {
+  none:         "#5a9e6f",
+  mild:         "#c8a012",
+  moderate:     "#d07030",
+  moderateHigh: "#c04040",
+  severe:       "#8b1a1a",
+};
+
+function buildFAQItems(config: TestConfig): { q: string; a: React.ReactNode }[] {
+  const minScore = config.scoreRanges[0]?.min ?? 0;
+  const maxScore = config.scoreRanges[config.scoreRanges.length - 1]?.max ?? 0;
+
+  const scoreTable = (
+    <div>
+      <span style={{ display: "block", marginBottom: 12 }}>
+        {`تتراوح درجات هذا الاختبار بين ${minScore} و${maxScore}. إليك ما تعنيه كل درجة:`}
+      </span>
+      <div
+        style={{
+          border: "1px solid var(--waaei-rule)",
+          borderRadius: 12,
+          overflow: "hidden",
+          marginBottom: 12,
+        }}
+      >
+        {config.scoreRanges.map((range, i) => (
+          <div
+            key={range.severity}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "10px 15px",
+              borderTop: i > 0 ? "1px solid var(--waaei-rule)" : undefined,
+              background: "var(--waaei-surface)",
+              direction: "rtl",
+            }}
+          >
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <span
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: "50%",
+                  background: severityColorMap[range.severity],
+                  flexShrink: 0,
+                  display: "inline-block",
+                }}
+              />
+              <span
+                style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: "var(--waaei-ink)",
+                }}
+              >
+                {range.label}
+              </span>
+            </div>
+            <span style={{ fontSize: 11, color: "var(--waaei-mute)" }}>
+              {range.min} – {range.max}
+            </span>
+          </div>
+        ))}
+      </div>
+      <span style={{ display: "block", fontSize: 12 }}>
+        ستظهر لك التفسير التفصيلي والتوصيات الخاصة بدرجتك مباشرة بعد إكمال الاختبار.
+      </span>
+    </div>
+  );
+
   return [
-    {
-      q: `ما هو ${config.name}؟`,
-      a: config.longDescription,
-    },
+    ...(config.conditionDescription
+      ? [{ q: `ما هو ${config.name}؟`, a: config.conditionDescription }]
+      : []),
+    { q: `ما الذي يقيسه ${config.name}؟`, a: config.longDescription },
     {
       q: `كم يستغرق ${config.name}؟`,
       a: `يستغرق الاختبار ${config.estimatedMinutes} دقائق تقريباً ويتضمن ${config.questions.length} سؤالاً.`,
@@ -315,16 +383,23 @@ function buildFAQItems(config: TestConfig) {
     },
     {
       q: "كيف أفسّر نتيجتي؟",
-      a: `تتراوح الدرجات بين "${firstRange}" و"${lastRange}". ستظهر لك تفسيراً مفصلاً وتوصيات بعد إكمال الاختبار.`,
+      a: scoreTable,
+    },
+    {
+      q: "متى يجب أن أطلب المساعدة المتخصصة؟",
+      a: "إذا استمرت الأعراض أكثر من أسبوعين، أو أثّرت على عملك وعلاقاتك ونشاطك اليومي، أو شعرت بأفكار سلبية متكررة — فهذه إشارة للتحدث مع طبيب أو معالج نفسي. طلب المساعدة قوة وليس ضعفاً.",
     },
   ];
 }
 
 function buildFAQSchema(config: TestConfig) {
+  const stringItems = buildFAQItems(config).filter(
+    (item): item is { q: string; a: string } => typeof item.a === "string"
+  );
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: buildFAQItems(config).map(({ q, a }) => ({
+    mainEntity: stringItems.map(({ q, a }) => ({
       "@type": "Question",
       name: q,
       acceptedAnswer: { "@type": "Answer", text: a },
@@ -660,15 +735,65 @@ export default async function TestPage({ params }: Props) {
               >
                 {q}
               </summary>
-              <p
+              <div
                 className="px-5 pb-5 pt-1 text-sm leading-relaxed"
                 style={{ color: "var(--waaei-mute)" }}
               >
                 {a}
-              </p>
+              </div>
             </details>
           ))}
         </section>
+
+        {relatedTests.length > 0 && (
+          <section className="max-w-2xl mx-auto px-4 pb-8 sm:pb-12">
+            <h2
+              className="text-xl font-bold mb-4"
+              style={{ color: "var(--waaei-ink)" }}
+            >
+              اختبارات ذات صلة
+            </h2>
+            <div className="grid grid-cols-3 gap-3" style={{ direction: "rtl" }}>
+              {relatedTests.map((t) => (
+                <a
+                  key={t.slug}
+                  href={`/${t.slug}`}
+                  style={{
+                    textDecoration: "none",
+                    display: "block",
+                    padding: 14,
+                    border: "1px solid var(--waaei-rule)",
+                    borderRadius: 14,
+                    background: "var(--waaei-surface)",
+                    textAlign: "right",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      background: categoryColorMap[
+                        testsBySlug[t.slug]?.category ?? "mood"
+                      ],
+                      marginBottom: 8,
+                    }}
+                  />
+                  <div
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: "var(--waaei-ink)",
+                      marginBottom: 3,
+                    }}
+                  >
+                    {t.name}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </section>
+        )}
       </main>
       <Footer />
     </div>
