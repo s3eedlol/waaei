@@ -212,11 +212,13 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 - Rich `conditionDescription` for top 5 (4-5 sentences each): depression, anxiety, ADHD, insomnia, phone addiction
 - `TEST_CONTENT_UPDATED` = "2026-05-31" → feeds `dateModified`/`lastReviewed` in MedicalWebPage schema
 - 23 pages submitted to IndexNow (commits b72ecf6, 7b3a830, 4ef3687)
+- `llms.txt` — `public/llms.txt` lists all 23 tests with scale names + direct URLs for ChatGPT/Perplexity/Claude citation (commit 47f204e)
 
 ### Remaining
 - Expand `conditionDescription` for 18 non-top-5 tests (priority: burnout, stress, OCD, social phobia, loneliness)
 - Approve blog drafts at `/review` daily — priority topics: depression, anxiety, ADHD, phone addiction articles
 - Monitor GSC ~2026-06-14 for CTR movement + People Also Ask appearances
+- Mental Health Resources Directory — therapist/crisis lines by country (UAE, Saudi, Egypt) — highest E-E-A-T + backlink value
 - Backlinks — 0 currently, deferred
 
 ## Dev server
