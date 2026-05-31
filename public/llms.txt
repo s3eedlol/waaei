@@ -1,0 +1,41 @@
+# واعي — Waaei
+
+> Free, anonymous Arabic-language mental health self-assessment tests based on validated clinical scales. No registration. No data stored.
+
+Waaei is an Arabic mental health platform offering 23 free anonymous self-assessment tests based on internationally validated clinical scales (PHQ-9, GAD-7, ASRS-5, ISI, and more). Designed for Arabic speakers in the GCC and Egypt. All results stay in your browser — nothing is stored on any server.
+
+## Self-Assessment Tests
+
+- Depression (PHQ-9): https://waaei.me/اختبار-الاكتئاب
+- Anxiety (GAD-7): https://waaei.me/اختبار-القلق
+- ADHD (ASRS-5): https://waaei.me/اختبار-ADHD-للبالغين
+- Insomnia (ISI): https://waaei.me/اختبار-الأرق
+- Phone addiction (SAS-SV): https://waaei.me/اختبار-إدمان-الهاتف
+- Stress (PSS-10): https://waaei.me/اختبار-التوتر
+- Burnout: https://waaei.me/اختبار-الإحتراق-الوظيفي
+- OCD (OCI-R): https://waaei.me/اختبار-الوسواس-القهري
+- PTSD (PCL-5): https://waaei.me/اختبار-الصدمة-النفسية
+- Social phobia (SPIN): https://waaei.me/اختبار-الرهاب-الاجتماعي
+- Self-esteem (RSES): https://waaei.me/اختبار-تقدير-الذات
+- Emotional intelligence (BEIS-10): https://waaei.me/اختبار-الذكاء-العاطفي
+- Loneliness (ULS-8): https://waaei.me/اختبار-الوحدة-النفسية
+- Anger (STAXI): https://waaei.me/اختبار-الغضب
+- Sleep quality (PSQI): https://waaei.me/اختبار-جودة-النوم
+- Bipolar screening (MDQ): https://waaei.me/اختبار-ثنائي-القطب
+- Eating disorders (EAT-7): https://waaei.me/اختبار-اضطراب-الأكل
+- Narcissism (PNI-16): https://waaei.me/اختبار-الشخصية-النرجسية
+- Attachment style (ECR-S): https://waaei.me/اختبار-نمط-التعلق-العاطفي
+- Big Five personality (BFI-10): https://waaei.me/اختبار-الشخصية-الخمسة
+- Depression + anxiety + stress (DASS-21): https://waaei.me/اختبار-الاكتئاب-والقلق-والتوتر
+- Post-traumatic growth (PTGI-SF): https://waaei.me/اختبار-النمو-بعد-الصدمة
+- Substance use (AUDIT-C): https://waaei.me/اختبار-أنماط-الاستهلاك
+- All tests: https://waaei.me/اختبارات
+
+## Articles
+
+Arabic mental health educational articles: https://waaei.me/مقالات
+
+## About
+
+Operated by Emdash (UAE, DED Abu Dhabi). Privacy-first — no accounts, no data collection, no tracking beyond anonymous analytics.
+Contact: contact@emdash.ae
