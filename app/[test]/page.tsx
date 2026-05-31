@@ -366,7 +366,7 @@ function buildFAQItems(config: TestConfig): { q: string; a: React.ReactNode }[] 
 
   return [
     ...(config.conditionDescription
-      ? [{ q: `ما هو ${config.name}؟`, a: config.conditionDescription }]
+      ? [{ q: `ما هو ${config.conditionName ?? config.name}؟`, a: config.conditionDescription }]
       : []),
     { q: `ما الذي يقيسه ${config.name}؟`, a: config.longDescription },
     {
