@@ -1,4 +1,4 @@
-import { unstable_cache, revalidateTag } from "next/cache";
+import { unstable_cache, updateTag } from "next/cache";
 import { supabase } from "./client";
 
 export type Article = {
@@ -100,8 +100,8 @@ export async function approveArticle(id: string): Promise<void> {
     .update({ status: "published", published_at: new Date().toISOString() })
     .eq("id", id);
   if (error) throw new Error(`Supabase update failed: ${error.message}`);
-  revalidateTag("published-articles", { expire: 0 });
-  revalidateTag("article-by-slug", { expire: 0 });
+  updateTag("published-articles");
+  updateTag("article-by-slug");
 }
 
 export async function deleteArticle(id: string): Promise<void> {
@@ -110,8 +110,8 @@ export async function deleteArticle(id: string): Promise<void> {
     .delete()
     .eq("id", id);
   if (error) throw new Error(`Supabase delete failed: ${error.message}`);
-  revalidateTag("published-articles", { expire: 0 });
-  revalidateTag("article-by-slug", { expire: 0 });
+  updateTag("published-articles");
+  updateTag("article-by-slug");
 }
 
 export async function saveArticle(
