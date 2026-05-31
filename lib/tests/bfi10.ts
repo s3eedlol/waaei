@@ -10,6 +10,7 @@ export const bfi10Config: TestConfig = {
   estimatedMinutes: 3,
   category: "personality",
   icon: "🎭",
+  conditionDescription: "نموذج العوامل الخمسة الكبرى هو الإطار الأكثر قبولاً علمياً لفهم الشخصية البشرية. يقيس خمسة أبعاد: الانفتاح على التجربة، الضمير، الانبساطية، الموافقة، والعصابية. فهم شخصيتك يساعد في تطوير الذات وتحسين العلاقات وفهم ردود أفعالك.",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },
     { label: "لا أوافق", value: 1 },

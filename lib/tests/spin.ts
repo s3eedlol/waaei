@@ -10,6 +10,7 @@ export const spinConfig: TestConfig = {
   estimatedMinutes: 4,
   category: "anxiety",
   icon: "🫂",
+  conditionDescription: "القلق الاجتماعي خوف مستمر ومفرط من المواقف الاجتماعية والتقييم من قِبل الآخرين. يختلف عن الخجل الطبيعي في شدته وتأثيره على الحياة اليومية والمهنية. هو اضطراب شائع وقابل للعلاج بفعالية من خلال العلاج المعرفي السلوكي.",
   answerOptions: [
     { label: "لا أبداً", value: 0 },
     { label: "قليلاً", value: 1 },

@@ -10,6 +10,7 @@ export const beis10Config: TestConfig = {
   estimatedMinutes: 3,
   category: "mood",
   icon: "🧠",
+  conditionDescription: "الذكاء العاطفي القدرة على التعرف على المشاعر وفهمها وإدارتها في النفس والآخرين. يرتبط ارتباطاً وثيقاً بالنجاح في العلاقات والعمل والصحة النفسية. الخبر الجيد: يمكن تطويره وتحسينه بالممارسة والوعي الذاتي.",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },
     { label: "لا أوافق", value: 1 },

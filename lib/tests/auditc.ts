@@ -10,6 +10,7 @@ export const auditcConfig: TestConfig = {
   estimatedMinutes: 2,
   category: "mood",
   icon: "⚠️",
+  conditionDescription: "الاستخدام الضار للمواد طيف واسع يتراوح بين الاستخدام المحفوف بمخاطر والإدمان الكامل. يؤثر على الصحة الجسدية والنفسية والعلاقات والعمل. الاكتشاف المبكر لأنماط الاستخدام يتيح التدخل قبل تطور المشكلة.",
   answerOptions: [
     { label: "أبداً", value: 0 },
     { label: "مرة شهرياً أو أقل", value: 1 },

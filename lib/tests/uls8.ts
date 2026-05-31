@@ -10,6 +10,7 @@ export const uls8Config: TestConfig = {
   estimatedMinutes: 2,
   category: "personality",
   icon: "🌌",
+  conditionDescription: "الوحدة النفسية شعور ذاتي بالانفصال والعزلة بغض النظر عن وجود الآخرين. تختلف عن العزلة الاجتماعية في أنها تجربة داخلية تؤثر على الصحة النفسية والجسدية. التعرف على مستواها خطوة أولى نحو بناء علاقات أكثر عمقاً ومعنىً.",
   answerOptions: [
     { label: "أبداً", value: 0 },
     { label: "نادراً", value: 1 },

@@ -10,6 +10,7 @@ export const pssConfig: TestConfig = {
   estimatedMinutes: 3,
   category: "stress",
   icon: "🍃",
+  conditionDescription: "التوتر النفسي استجابة طبيعية للضغوط اليومية، لكنه يصبح ضاراً حين يكون مزمناً. يؤثر على الصحة الجسدية والنفسية ويرتبط بمشاكل النوم وضعف التركيز وتراجع المناعة. التعرف المبكر على مستوى التوتر يساعد في اتخاذ خطوات وقائية فعّالة.",
   answerOptions: [
     { label: "أبداً", value: 0 },
     { label: "نادراً", value: 1 },

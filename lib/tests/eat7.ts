@@ -10,6 +10,7 @@ export const eat7Config: TestConfig = {
   estimatedMinutes: 2,
   category: "mood",
   icon: "🍎",
+  conditionDescription: "اضطرابات الأكل أنماط سلوكية وعاطفية مضطربة تجاه الطعام والوزن والجسم. تشمل طيفاً واسعاً من السلوكيات وقد تؤثر بشكل خطير على الصحة الجسدية والنفسية. الاكتشاف المبكر والدعم المتخصص يُحدثان فارقاً كبيراً في مسار التعافي.",
   answerOptions: [
     { label: "أبداً أو نادراً", value: 0 },
     { label: "أحياناً", value: 1 },

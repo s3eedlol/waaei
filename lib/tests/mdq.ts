@@ -10,6 +10,7 @@ export const mdqConfig: TestConfig = {
   estimatedMinutes: 4,
   category: "mood",
   icon: "⚖️",
+  conditionDescription: "اضطراب ثنائي القطب يتميز بتقلبات حادة في المزاج بين نوبات الاكتئاب ونوبات الهوس أو الهوس الخفيف. يختلف عن تقلبات المزاج الطبيعية في شدتها ومدتها وتأثيرها على الحياة اليومية. هو اضطراب قابل للإدارة بفعالية مع التشخيص المناسب والعلاج المتخصص.",
   answerOptions: [
     { label: "لا", value: 0 },
     { label: "نعم", value: 1 },

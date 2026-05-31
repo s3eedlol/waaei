@@ -10,6 +10,7 @@ export const staxiConfig: TestConfig = {
   estimatedMinutes: 3,
   category: "mood",
   icon: "🌋",
+  conditionDescription: "الغضب مشاعر طبيعية، لكن أنماطه غير المُدارة تؤثر سلباً على الصحة والعلاقات والعمل. يميز علم النفس بين الغضب كحالة آنية والغضب كسمة شخصية مستمرة. فهم أنماط غضبك يساعد في تطوير استراتيجيات تعامل أكثر صحة وهدوءاً.",
   answerOptions: [
     { label: "لا أبداً", value: 0 },
     { label: "أحياناً", value: 1 },

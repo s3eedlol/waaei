@@ -10,6 +10,7 @@ export const gad7Config: TestConfig = {
   estimatedMinutes: 2,
   category: "anxiety",
   icon: "🌊",
+  conditionDescription: "القلق العام اضطراب يتميز بالقلق المفرط والمستمر تجاه أمور الحياة اليومية. يختلف عن القلق الطبيعي في أنه يصعب السيطرة عليه ويؤثر على النوم والتركيز والعلاقات. يُعدّ من أكثر الاضطرابات النفسية شيوعاً ويستجيب بشكل جيد للعلاج النفسي.",
   answerOptions: [
     { label: "أبداً", value: 0 },
     { label: "عدة أيام", value: 1 },

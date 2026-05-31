@@ -10,6 +10,7 @@ export const bpniConfig: TestConfig = {
   estimatedMinutes: 4,
   category: "personality",
   icon: "🪞",
+  conditionDescription: "السمات النرجسية طيف من الخصائص الشخصية يتراوح بين الصحي والمرضي. تشمل المبالغة في تقدير الذات وضعف التعاطف والحاجة للإعجاب. فهم هذه السمات في النفس والآخرين يساعد في تحسين العلاقات وتطوير الوعي الذاتي.",
   answerOptions: [
     { label: "لا تنطبق عليّ أبداً", value: 0 },
     { label: "نادراً ما تنطبق", value: 1 },

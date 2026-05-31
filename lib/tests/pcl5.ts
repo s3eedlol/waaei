@@ -10,6 +10,7 @@ export const pcl5Config: TestConfig = {
   estimatedMinutes: 5,
   category: "anxiety",
   icon: "🌧️",
+  conditionDescription: "اضطراب ما بعد الصدمة يتطور بعد التعرض لحادثة صادمة ويتميز بالذكريات المتطفلة والتجنب والتيقظ المفرط. لا يعني وجود أعراضه ضعفاً، بل هو استجابة طبيعية لأحداث غير طبيعية. العلاج المتخصص فعّال جداً ويساعد كثيراً من المتعافين على استعادة حياتهم.",
   answerOptions: [
     { label: "لا أبداً", value: 0 },
     { label: "قليلاً", value: 1 },

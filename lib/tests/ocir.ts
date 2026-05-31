@@ -10,6 +10,7 @@ export const ocirConfig: TestConfig = {
   estimatedMinutes: 3,
   category: "ocd",
   icon: "🔄",
+  conditionDescription: "الوسواس القهري اضطراب يتميز بأفكار متكررة غير مرغوب فيها (وساوس) وسلوكيات متكررة (قهر) تهدف إلى تخفيف القلق. يؤثر على الحياة اليومية ويستهلك وقتاً وطاقة كبيرة. هو قابل للعلاج بفعالية من خلال العلاج المعرفي السلوكي.",
   answerOptions: [
     { label: "لا أبداً", value: 0 },
     { label: "قليلاً", value: 1 },

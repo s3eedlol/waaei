@@ -10,6 +10,7 @@ export const ecrsConfig: TestConfig = {
   estimatedMinutes: 3,
   category: "personality",
   icon: "💝",
+  conditionDescription: "نمط التعلق العاطفي يصف كيفية ارتباطنا بالآخرين في العلاقات الوثيقة ويتشكل في الطفولة المبكرة. التعرف على نمطك — سواء كان آمناً أو قلقاً أو متجنباً — يساعد في فهم سلوكياتك العاطفية وتحسين علاقاتك. يمكن تطوير التعلق الآمن في أي مرحلة من العمر.",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },
     { label: "لا أوافق", value: 1 },

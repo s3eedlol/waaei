@@ -10,6 +10,7 @@ export const isiConfig: TestConfig = {
   estimatedMinutes: 2,
   category: "stress",
   icon: "🌙",
+  conditionDescription: "الأرق اضطراب في النوم يتمثل في صعوبة الدخول فيه أو الاستمرار أو الاستيقاظ المبكر غير المرغوب. يؤثر سلباً على الطاقة والمزاج والتركيز والصحة العامة. يستجيب بشكل ممتاز للعلاج المعرفي السلوكي للأرق (CBT-I) دون الحاجة الدائمة للأدوية.",
   answerOptions: [
     { label: "لا توجد مشكلة", value: 0 },
     { label: "مشكلة خفيفة", value: 1 },

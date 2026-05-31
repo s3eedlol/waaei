@@ -10,6 +10,7 @@ export const asrs5Config: TestConfig = {
   estimatedMinutes: 2,
   category: "mood",
   icon: "⚡",
+  conditionDescription: "اضطراب نقص الانتباه وفرط الحركة (ADHD) لدى البالغين يتجلى في صعوبة التركيز والتنظيم والاندفاعية. كثيراً ما يُشخَّص متأخراً رغم استمراره منذ الطفولة. يستجيب للعلاج السلوكي وأحياناً الدوائي، وإدراكه يُحدث فارقاً كبيراً في الحياة اليومية.",
   answerOptions: [
     { label: "أبداً", value: 0 },
     { label: "نادراً", value: 1 },

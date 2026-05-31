@@ -10,6 +10,7 @@ export const dass21Config: TestConfig = {
   estimatedMinutes: 5,
   category: "mood",
   icon: "🔮",
+  conditionDescription: "مقياس DASS-21 يقيس ثلاثة جوانب مترابطة من الضائقة النفسية: الاكتئاب والقلق والتوتر. فهم توزيع هذه المشاعر يساعد في تحديد المجالات التي تحتاج اهتماماً أكبر. الحصول على صورة شاملة لصحتك النفسية خطوة أساسية نحو التحسن.",
   answerOptions: [
     { label: "لم ينطبق عليّ أبداً", value: 0 },
     { label: "انطبق عليّ أحياناً", value: 1 },

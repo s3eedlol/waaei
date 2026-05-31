@@ -10,6 +10,7 @@ export const sassvConfig: TestConfig = {
   estimatedMinutes: 2,
   category: "stress",
   icon: "📱",
+  conditionDescription: "إدمان الهاتف الذكي نمط سلوكي يتميز باستخدام مفرط يؤثر على الحياة اليومية والعلاقات والنوم والعمل. الوعي بهذا النمط أول خطوة للتغيير. تقنيات بسيطة كتحديد أوقات الاستخدام تُحدث فارقاً كبيراً في استعادة التوازن.",
   answerOptions: [
     { label: "لا أوافق بشدة", value: 0 },
     { label: "لا أوافق", value: 1 },
