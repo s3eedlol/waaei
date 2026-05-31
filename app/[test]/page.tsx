@@ -264,7 +264,7 @@ const relatedBySlug: Record<string, string[]> = {
 // Bump TEST_CONTENT_UPDATED when test content, scoring, or interpretation changes.
 // Used for `dateModified` + `lastReviewed` in the MedicalWebPage schema —
 // signals to Google/YMYL crawlers that content is actively maintained.
-const TEST_CONTENT_UPDATED = "2026-05-22";
+const TEST_CONTENT_UPDATED = "2026-05-31";
 
 function buildTestSchema(slug: string, meta: { title: string; description: string }) {
   const source = sourceBySlug[slug];
