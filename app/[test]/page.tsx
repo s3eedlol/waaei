@@ -68,8 +68,8 @@ const metaBySlug: Record<string, { title: string; description: string; keywords:
     keywords: ["اختبار الاكتئاب", "هل أنا مصاب بالاكتئاب", "PHQ-9 عربي", "أعراض الاكتئاب اختبار"],
   },
   "اختبار-القلق": {
-    title: "اختبار القلق النفسي — GAD-7 بالعربي",
-    description: "اختبر مستوى قلقك بمقياس GAD-7 العلمي. هل لدي قلق مزمن؟ اكتشف بشكل سري ومجاني.",
+    title: "هل لدي قلق مزمن؟ — اختبار GAD-7 بالعربي",
+    description: "اختبر مستوى قلقك بمقياس GAD-7 العلمي المُتحقَّق منه. هل قلقك طبيعي أم يحتاج اهتماماً؟ اكتشف بشكل سري ومجاني.",
     keywords: ["اختبار القلق النفسي", "هل لدي قلق مزمن", "GAD-7 عربي", "اضطراب القلق العام"],
   },
   "اختبار-الإحتراق-الوظيفي": {
@@ -587,17 +587,22 @@ export default async function TestPage({ params }: Props) {
             </span>
           </h1>
 
-          {/* Description — verbatim from config.longDescription */}
-          <p
-            style={{
-              fontSize: 14,
-              color: "var(--waaei-mute)",
-              lineHeight: "var(--waaei-lh-body)",
-              marginBottom: 20,
-            }}
-          >
-            {config.longDescription}
-          </p>
+          {/* Description — split on \n\n to support multi-paragraph content */}
+          <div style={{ marginBottom: 20 }}>
+            {config.longDescription.split("\n\n").map((para, i) => (
+              <p
+                key={i}
+                style={{
+                  fontSize: 14,
+                  color: "var(--waaei-mute)",
+                  lineHeight: "var(--waaei-lh-body)",
+                  marginBottom: i < config.longDescription.split("\n\n").length - 1 ? 12 : 0,
+                }}
+              >
+                {para}
+              </p>
+            ))}
+          </div>
 
           {/* Stats strip — 2-col surface card */}
           <div
