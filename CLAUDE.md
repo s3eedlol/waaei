@@ -55,6 +55,20 @@ Arabic-named directories under `app/` break the build in two ways:
 ### Scoring
 `lib/scoring.ts` — `calculateScore()` handles reversed items (e.g. PSS, RSES). `maxValue = answerOptions.length - 1`. Score ranges defined per-test in `TestConfig.scoreRanges`.
 
+### FAQ structure — 7 items per test (updated 2026-05-31)
+`buildFAQItems(config)` in `app/[test]/page.tsx` returns `{ q: string; a: React.ReactNode }[]`. Order:
+1. `ما هو ${config.name}؟` — uses `config.conditionDescription` (about the condition itself). Skipped if field absent.
+2. `ما الذي يقيسه ${config.name}؟` — uses `config.longDescription` (about the test)
+3. `كم يستغرق ${config.name}؟` — duration + question count
+4. `هل هذا الاختبار تشخيص طبي؟` — static disclaimer
+5. `هل نتائجي سرية؟` — static privacy answer
+6. `كيف أفسّر نتيجتي؟` — JSX score table rendered from `config.scoreRanges` with `severityColorMap` dots
+7. `متى يجب أن أطلب المساعدة المتخصصة؟` — static help-seeking guidance
+
+The FAQ body wrapper is `<div>` (not `<p>`) to allow block-level JSX in item 6. `buildFAQSchema` filters to string-only items before building JSON-LD (item 6 is excluded from schema as it's JSX).
+
+**`conditionDescription`** — optional field on `TestConfig` (`lib/types.ts`). All 23 tests have it populated. 2–3 sentence Arabic description of the condition (not the test). When adding a new test, always add this field.
+
 ## SEO architecture — data maps in `app/[test]/page.tsx`
 All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When adding a new test, update all five maps:
 
@@ -72,7 +86,7 @@ All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When addi
 | `metaBySlug` | Slug → title, description, keywords |
 | `conditionBySlug` | Slug → MedicalCondition schema (name + alternateName) |
 | `sourceBySlug` | Slug → clinical scale name, authors, source URL |
-| `relatedBySlug` | Slug → 3 related test slugs (shown after results) |
+| `relatedBySlug` | Slug → 3 related test slugs (shown as persistent grid after FAQ + after results in TestEngine) |
 
 Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the footer links in `components/Footer.tsx`.
 
@@ -186,6 +200,24 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 | psqi | PSQI Sleep quality | اختبار-جودة-النوم |
 | ptgi | PTGI-SF Post-traumatic growth | اختبار-النمو-بعد-الصدمة |
 | auditc | AUDIT-C Substances | اختبار-أنماط-الاستهلاك |
+
+## SEO status
+
+### Fixed (2026-05-31)
+- FAQ items expanded 5 → 7 on all 23 tests (conditionDescription, score table, when to seek help, related tests grid)
+- CTR rewrites: phone addiction → "هل أنا مدمن على هاتفي؟", ADHD → "هل لدي ADHD؟" (commit c61ccb2)
+- Anxiety title → "هل لدي قلق مزمن؟ — اختبار GAD-7 بالعربي"
+- `conditionName` field added to `TestConfig` + all 23 test configs
+- FAQ first question changed from "ما هو اختبار X؟" → "ما هو ${conditionName}؟" — People Also Ask eligible
+- Rich `conditionDescription` for top 5 (4-5 sentences each): depression, anxiety, ADHD, insomnia, phone addiction
+- `TEST_CONTENT_UPDATED` = "2026-05-31" → feeds `dateModified`/`lastReviewed` in MedicalWebPage schema
+- 23 pages submitted to IndexNow (commits b72ecf6, 7b3a830, 4ef3687)
+
+### Remaining
+- Expand `conditionDescription` for 18 non-top-5 tests (priority: burnout, stress, OCD, social phobia, loneliness)
+- Approve blog drafts at `/review` daily — priority topics: depression, anxiety, ADHD, phone addiction articles
+- Monitor GSC ~2026-06-14 for CTR movement + People Also Ask appearances
+- Backlinks — 0 currently, deferred
 
 ## Dev server
 Run `npm run dev` — available at http://localhost:3000 (or 3001 if 3000 is taken).
