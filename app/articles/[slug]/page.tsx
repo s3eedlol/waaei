@@ -89,9 +89,10 @@ export default async function ArticlePage({ params }: Props) {
 
   const catColor = CATEGORY_COLOR[article.category] ?? "#5e7bbf";
   const CTA_MARKER = "<!-- CTA -->";
-  const ctaIdx = article.content.indexOf(CTA_MARKER);
-  const beforeCTA = ctaIdx === -1 ? null : article.content.slice(0, ctaIdx);
-  const afterCTA  = ctaIdx === -1 ? null : article.content.slice(ctaIdx + CTA_MARKER.length);
+  const content = article.content ?? "";
+  const ctaIdx = content.indexOf(CTA_MARKER);
+  const beforeCTA = ctaIdx === -1 ? null : content.slice(0, ctaIdx);
+  const afterCTA  = ctaIdx === -1 ? null : content.slice(ctaIdx + CTA_MARKER.length);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -142,7 +143,7 @@ export default async function ArticlePage({ params }: Props) {
 
           {/* Content before CTA */}
           <ReactMarkdown remarkPlugins={[remarkGfm]} components={mdComponents}>
-            {beforeCTA !== null ? beforeCTA : article.content}
+            {beforeCTA !== null ? beforeCTA : content}
           </ReactMarkdown>
 
           {/* CTA card — only shown if <!-- CTA --> marker exists */}

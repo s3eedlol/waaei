@@ -1,4 +1,5 @@
 import { unstable_cache, updateTag } from "next/cache";
+import { cache } from "react";
 import { supabase } from "./client";
 
 export type Article = {
@@ -73,11 +74,10 @@ export const getPublishedArticles = unstable_cache(
   { revalidate: 3600, tags: ["published-articles"] }
 );
 
-export const getArticleBySlug = unstable_cache(
-  _getArticleBySlug,
-  ["article-by-slug"],
-  { revalidate: 3600, tags: ["article-by-slug"] }
-);
+// React cache() deduplicates within a single request without writing
+// persistent cache entries — avoids ERR_INVALID_CHAR in x-next-cache-tags
+// for Arabic slug paths (HTTP headers must be ASCII-only).
+export const getArticleBySlug = cache(_getArticleBySlug);
 
 export async function getDraftArticles(): Promise<Article[]> {
   try {
@@ -101,7 +101,6 @@ export async function approveArticle(id: string): Promise<void> {
     .eq("id", id);
   if (error) throw new Error(`Supabase update failed: ${error.message}`);
   updateTag("published-articles");
-  updateTag("article-by-slug");
 }
 
 export async function deleteArticle(id: string): Promise<void> {
@@ -111,7 +110,6 @@ export async function deleteArticle(id: string): Promise<void> {
     .eq("id", id);
   if (error) throw new Error(`Supabase delete failed: ${error.message}`);
   updateTag("published-articles");
-  updateTag("article-by-slug");
 }
 
 export async function saveArticle(
