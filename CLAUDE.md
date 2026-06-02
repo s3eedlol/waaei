@@ -205,6 +205,9 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 
 ## SEO status
 
+### Fixed (2026-06-02)
+- **Articles hub 500 fully resolved.** Newly-approved articles were returning "This page couldn't load" on Vercel. Root cause was `generateStaticParams` keeping `app/articles/[slug]` in SSG/ISR mode, which emits the decoded Arabic pathname as an `x-next-cache-tags` header on on-demand renders → `ERR_INVALID_CHAR` → 500. Fixed by rendering the route dynamically (`force-dynamic`, no `generateStaticParams`), matching the `[test]` route. The earlier `getArticleBySlug` React-`cache()` change was a necessary but incomplete fix. Full detail in the Articles hub → Pages section. (commit a81e586)
+
 ### Fixed (2026-05-31)
 - FAQ items expanded 5 → 7 on all 23 tests (conditionDescription, score table, when to seek help, related tests grid)
 - CTR rewrites: phone addiction → "هل أنا مدمن على هاتفي؟", ADHD → "هل لدي ADHD؟" (commit c61ccb2)
