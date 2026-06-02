@@ -5,14 +5,19 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { getPublishedArticles, getArticleBySlug } from "@/lib/supabase/articles";
+import { getArticleBySlug } from "@/lib/supabase/articles";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export async function generateStaticParams() {
-  const articles = await getPublishedArticles();
-  return articles.map((a) => ({ slug: a.slug }));
-}
+// Render dynamically (like the Arabic-slug `[test]` route) — NOT via SSG/ISR.
+// `generateStaticParams` would put this route in SSG/ISR mode, which caches the
+// rendered page together with an implicit route tag derived from the decoded
+// pathname (`/articles/<arabic-slug>`). On Vercel that tag is written into the
+// `x-next-cache-tags` HTTP header; non-ASCII Arabic chars throw ERR_INVALID_CHAR
+// → 500 whenever a newly-approved article (absent from the last build) renders
+// on-demand. Dynamic rendering collects no cache tags, so no header, no crash.
+// Do NOT add generateStaticParams back, and do NOT mark this route SSG/ISR.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
