@@ -90,6 +90,8 @@ All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When addi
 
 Also update `app/[test]/opengraph-image.tsx` (`testsBySlug` there) and the footer links in `components/Footer.tsx`.
 
+**Title brand-suffix gotcha:** `app/layout.tsx` sets `title.template: "%s | واعي"`, so every `metaBySlug` title is auto-suffixed with the brand. **Never hardcode `| واعي` into a `metaBySlug` title** — the template doubles it (`… | واعي | واعي`). Store the bare title only. The about/privacy/all-tests pages are the exception: they use `title: { absolute: "… | واعي" }` in `generateMetadata`, which bypasses the template, so their brand suffix is written explicitly. (Fixed 2026-06-03 — ADHD + phone-addiction titles had hardcoded suffixes.)
+
 ### OG image generation
 `app/opengraph-image.tsx` — homepage OG image (1200×630, dark green brand).
 `app/[test]/opengraph-image.tsx` — per-test OG image using **Cairo** font fetched from Google Fonts at edge runtime (note: OG image still uses Cairo, not Tajawal — `next/og` image generation uses a separate font pipeline). Uses the `testsBySlug` map to look up name + icon.
@@ -204,6 +206,10 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 | auditc | AUDIT-C Substances | اختبار-أنماط-الاستهلاك |
 
 ## SEO status
+
+### Fixed (2026-06-03)
+- **Duplicated brand suffix in 2 titles.** The ADHD (`اختبار-ADHD-للبالغين`) and phone-addiction (`اختبار-إدمان-الهاتف`) `metaBySlug` titles hardcoded `| واعي`, which `layout.tsx`'s `title.template` ("%s | واعي") then doubled → `… | واعي | واعي`. Removed the hardcoded suffix from both; template now appends the brand once. See the "Title brand-suffix gotcha" note in the SEO architecture section. (commit b87985f)
+- Cleared standing lint errors in the same commit: review logout link `<a>`→`<Link prefetch={false}>`, about-page privacy link `<a>`→`<Link>`, dropped unused `insertAt`/`secondHeading` in `generateArticle.ts`. Only remaining lint error is the intentional `setState` in `TestEngine.tsx`'s shared-`?score=` effect.
 
 ### Fixed (2026-06-02)
 - **Articles hub 500 fully resolved.** Newly-approved articles were returning "This page couldn't load" on Vercel. Root cause was `generateStaticParams` keeping `app/articles/[slug]` in SSG/ISR mode, which emits the decoded Arabic pathname as an `x-next-cache-tags` header on on-demand renders → `ERR_INVALID_CHAR` → 500. Fixed by rendering the route dynamically (`force-dynamic`, no `generateStaticParams`), matching the `[test]` route. The earlier `getArticleBySlug` React-`cache()` change was a necessary but incomplete fix. Full detail in the Articles hub → Pages section. (commit a81e586)
