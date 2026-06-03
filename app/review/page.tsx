@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { getDraftArticles, getPublishedArticles } from "@/lib/supabase/articles";
 import { submitReviewPassword, approveArticleAction, deleteArticleAction } from "./actions";
 import ReactMarkdown from "react-markdown";
@@ -54,9 +55,9 @@ export default async function ReviewPage({ searchParams }: Props) {
               {drafts.length} مسودة · {published.length} منشور
             </div>
           </div>
-          <a href="/review/logout" style={{ fontSize: 13, color: "var(--waaei-mute)", textDecoration: "none", border: "1px solid var(--waaei-rule)", borderRadius: 7, padding: "6px 14px" }}>
+          <Link href="/review/logout" prefetch={false} style={{ fontSize: 13, color: "var(--waaei-mute)", textDecoration: "none", border: "1px solid var(--waaei-rule)", borderRadius: 7, padding: "6px 14px" }}>
             تسجيل الخروج
-          </a>
+          </Link>
         </div>
 
         {/* Articles */}

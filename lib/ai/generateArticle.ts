@@ -159,8 +159,6 @@ export async function generateAndSaveArticle(
   if (!content.includes("<!-- CTA -->")) {
     const headingMatches = [...content.matchAll(/^## .+/gm)];
     if (headingMatches.length >= 2) {
-      const secondHeading = headingMatches[1];
-      const insertAt = (secondHeading.index ?? 0) + secondHeading[0].length;
       // Find the end of the second section (start of third ## heading or end of content)
       const thirdHeading = headingMatches[2];
       const sectionEnd = thirdHeading ? (thirdHeading.index ?? content.length) : content.length;

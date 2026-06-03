@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
@@ -160,12 +161,12 @@ export function AboutPage() {
           }}
         >
           <span style={{ fontWeight: 700 }}>© Emdash</span>
-          <a
+          <Link
             href="/سياسة-الخصوصية"
             style={{ color: "var(--waaei-mute)", textDecoration: "none" }}
           >
             سياسة الخصوصية
-          </a>
+          </Link>
         </div>
       </main>
 
