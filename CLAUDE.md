@@ -233,6 +233,18 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 - Mental Health Resources Directory — therapist/crisis lines by country (UAE, Saudi, Egypt) — highest E-E-A-T + backlink value
 - Backlinks — 0 currently, deferred
 
+### TODO — self-harm crisis banner (recommended, NOT yet built) — review next session
+**Context:** When EPDS was added (2026-06-05), a per-item crisis banner was prototyped then **reverted** at the operator's request to review later. EPDS item 10 and PHQ-9 item 9 both screen for thoughts of self-harm; right now that risk is only covered by safety wording inside the results recommendations + disclaimer (no dedicated, always-visible crisis surface). This is the highest-value safety enhancement for those two tests and pairs naturally with the **Mental Health Resources Directory** roadmap item above.
+
+**Proposed design (generic, config-driven so both EPDS + PHQ-9 benefit):**
+- `lib/types.ts` → add to `TestConfig`: `crisisItem?: number` (question id that screens for self-harm; any answer > 0 triggers the banner) and `crisisMessage?: string` (optional tailored/gendered body — EPDS needs **feminine** Arabic phrasing, PHQ-9 neutral/masculine; falls back to a neutral default).
+- `lib/tests/epds.ts` → `crisisItem: 10`; `lib/tests/phq9.ts` → `crisisItem: 9`.
+- New `lib/crisisResources.ts` → exported `CRISIS_RESOURCES` array (also reusable for the future Resources Directory page). **Verified numbers (June 2026):** UAE 800 4673 (national mental support line) + 999 emergency; Saudi 920033360 (National Center for Mental Health Promotion) + 937 (MoH 24/7); Egypt 16328 (active 24/7) + 08008880700.
+- `components/TestEngine.tsx` → compute `crisisTriggered = config.crisisItem != null && sharedScore === null && (answers[config.crisisItem] ?? 0) > 0` (shared `?score=` arrivals carry no per-item data, so the banner naturally stays hidden there — correct). Render an ink-card banner (`var(--waaei-ink)` bg, light text, `role="alert"`) as the FIRST results block (right after the top bar, before the hero score): heading "أنت لست وحدك" (written gender-neutral), `config.crisisMessage` body, then `CRISIS_RESOURCES` rows as `tel:` links with `dir="ltr"` on the numbers, and an emergency-services footnote. Do NOT put crisis info on the shareable canvas card (privacy).
+- Verified clean on: `tsc`, build (route stays `ƒ` Dynamic), 13/13 existing tests. A TestEngine interaction regression test (answer item 10 > 0 → banner appears) was planned but not written — add one since this is safety-critical.
+
+**Arabic gender gotcha:** imperatives differ in writing (تواصل vs تواصلي); past-tense 2nd-person + "لست/وحدك" are written identically for both genders. That's why the heading is fixed-neutral and only the body is per-config.
+
 ## Dev server
 Run `npm run dev` — available at http://localhost:3000 (or 3001 if 3000 is taken).
 To connect Vercel CLI through corporate proxy: `$env:NODE_OPTIONS="--use-system-ca"; vercel`
