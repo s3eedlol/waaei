@@ -3,7 +3,7 @@
 # واعي — Arabic Mental Health Self-Assessment Platform
 
 ## What this is
-23 free, anonymous, Arabic-language mental health self-assessment tests targeting GCC + Egypt. Brand name: **واعي** (waaei = "aware"). Domain: **waaei.me**. Zero stigma framing.
+24 free, anonymous, Arabic-language mental health self-assessment tests targeting GCC + Egypt. Brand name: **واعي** (waaei = "aware"). Domain: **waaei.me**. Zero stigma framing.
 
 **Operator:** Emdash — UAE company, DED Abu Dhabi licence. Contact: contact@emdash.ae · https://emdash.ae
 
@@ -67,7 +67,7 @@ Arabic-named directories under `app/` break the build in two ways:
 
 The FAQ body wrapper is `<div>` (not `<p>`) to allow block-level JSX in item 6. `buildFAQSchema` filters to string-only items before building JSON-LD (item 6 is excluded from schema as it's JSX).
 
-**`conditionDescription`** — optional field on `TestConfig` (`lib/types.ts`). All 23 tests have it populated. 2–3 sentence Arabic description of the condition (not the test). When adding a new test, always add this field.
+**`conditionDescription`** — optional field on `TestConfig` (`lib/types.ts`). All 24 tests have it populated. 2–3 sentence Arabic description of the condition (not the test). When adding a new test, always add this field.
 
 ## SEO architecture — data maps in `app/[test]/page.tsx`
 All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When adding a new test, update all five maps:
@@ -77,7 +77,7 @@ All SEO metadata lives alongside the routing in `app/[test]/page.tsx`. When addi
 **MedicalWebPage schema enrichment (May 2026):** `buildTestSchema` now emits:
 - `citation` — ScholarlyArticle pulled from `sourceBySlug` (PubMed/WHO link + scale name + authors). Tells Google/YMYL crawlers the test is grounded in published research.
 - `dateModified` + `lastReviewed` — driven by the `TEST_CONTENT_UPDATED` constant at the top of the file.
-**When you change test content, scoring, or interpretation, bump `TEST_CONTENT_UPDATED`** — that single constant updates schema dates across all 23 tests. (Sitemap dates are separate in `app/sitemap.ts`; bump both together for consistency.)
+**When you change test content, scoring, or interpretation, bump `TEST_CONTENT_UPDATED`** — that single constant updates schema dates across all 24 tests. (Sitemap dates are separate in `app/sitemap.ts`; bump both together for consistency.)
 
 
 | Map | Purpose |
@@ -178,7 +178,7 @@ Raw Arabic sources silently 404. Canonical/OG URLs still use the raw Arabic form
 ### Daily flow
 Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operator visits `/review`, reads it, clicks نشر ✓ → `status: published` + cache invalidated → live on `/مقالات` immediately. To add topics, extend the `TOPICS` array in `lib/ai/generateArticle.ts`.
 
-## Test inventory (23 total)
+## Test inventory (24 total)
 | File | Scale | Slug |
 |------|-------|------|
 | phq9 | PHQ-9 Depression | اختبار-الاكتئاب |
@@ -204,6 +204,7 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 | psqi | PSQI Sleep quality | اختبار-جودة-النوم |
 | ptgi | PTGI-SF Post-traumatic growth | اختبار-النمو-بعد-الصدمة |
 | auditc | AUDIT-C Substances | اختبار-أنماط-الاستهلاك |
+| epds | EPDS Postpartum depression | اختبار-اكتئاب-ما-بعد-الولادة |
 
 ## SEO status
 

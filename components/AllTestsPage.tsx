@@ -24,6 +24,7 @@ import { bpniConfig } from "@/lib/tests/bpni";
 import { psqiConfig } from "@/lib/tests/psqi";
 import { ptgiConfig } from "@/lib/tests/ptgi";
 import { auditcConfig } from "@/lib/tests/auditc";
+import { epdsConfig } from "@/lib/tests/epds";
 import { TestConfig } from "@/lib/types";
 
 type Section = { title: string; tests: TestConfig[]; color: string };
@@ -32,7 +33,7 @@ const sections: Section[] = [
   {
     title: "الاكتئاب والمزاج",
     color: "var(--waaei-cat-depression)",
-    tests: [phq9Config, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig],
+    tests: [phq9Config, epdsConfig, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig],
   },
   {
     title: "القلق والخوف",

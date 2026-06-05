@@ -29,6 +29,7 @@ import { bpniConfig } from "@/lib/tests/bpni";
 import { psqiConfig } from "@/lib/tests/psqi";
 import { ptgiConfig } from "@/lib/tests/ptgi";
 import { auditcConfig } from "@/lib/tests/auditc";
+import { epdsConfig } from "@/lib/tests/epds";
 import { TestConfig } from "@/lib/types";
 
 // Note: previously `export const dynamic = "force-dynamic"` — removed May 2026
@@ -59,6 +60,7 @@ const testsBySlug: Record<string, TestConfig> = {
   "اختبار-جودة-النوم": psqiConfig,
   "اختبار-النمو-بعد-الصدمة": ptgiConfig,
   "اختبار-أنماط-الاستهلاك": auditcConfig,
+  "اختبار-اكتئاب-ما-بعد-الولادة": epdsConfig,
 };
 
 const metaBySlug: Record<string, { title: string; description: string; keywords: string[] }> = {
@@ -177,6 +179,11 @@ const metaBySlug: Record<string, { title: string; description: string; keywords:
     description: "هل يؤثر استخدامك للمواد المسكّرة على حياتك؟ اختبر نفسك بمقياس AUDIT. سري تماماً.",
     keywords: ["اختبار إدمان المواد", "AUDIT عربي", "أنماط الشرب", "الكشف المبكر عن الإدمان"],
   },
+  "اختبار-اكتئاب-ما-بعد-الولادة": {
+    title: "هل لدي اكتئاب ما بعد الولادة؟ — اختبار EPDS بالعربي",
+    description: "هل تشعرين بالحزن أو القلق بعد الولادة؟ اختبري نفسك بمقياس إدنبرة (EPDS) المُعتمَد عالمياً. مجاني وسري — للحامل والأم بعد الولادة.",
+    keywords: ["اختبار اكتئاب ما بعد الولادة", "هل لدي اكتئاب ما بعد الولادة", "اكتئاب بعد الولادة اختبار", "مقياس إدنبرة", "EPDS عربي"],
+  },
 };
 
 type MedicalCondition = { "@type": "MedicalCondition"; name: string; alternateName: string };
@@ -205,6 +212,7 @@ const conditionBySlug: Record<string, MedicalCondition> = {
   "اختبار-جودة-النوم":              { "@type": "MedicalCondition", name: "Sleep Disorder",                    alternateName: "اضطراب النوم" },
   "اختبار-النمو-بعد-الصدمة":        { "@type": "MedicalCondition", name: "Post-Traumatic Growth",            alternateName: "النمو بعد الصدمة" },
   "اختبار-أنماط-الاستهلاك":         { "@type": "MedicalCondition", name: "Alcohol Use Disorder",             alternateName: "اضطراب استخدام الكحول" },
+  "اختبار-اكتئاب-ما-بعد-الولادة":   { "@type": "MedicalCondition", name: "Postpartum Depression",            alternateName: "اكتئاب ما بعد الولادة" },
 };
 
 type ScaleSource = { scale: string; authors: string; url: string };
@@ -233,6 +241,7 @@ const sourceBySlug: Record<string, ScaleSource> = {
   "اختبار-جودة-النوم":              { scale: "PSQI (Pittsburgh Sleep Quality Index)",             authors: "Buysse et al., 1989",                          url: "https://pubmed.ncbi.nlm.nih.gov/2748771/" },
   "اختبار-النمو-بعد-الصدمة":        { scale: "PTGI-SF (Post-Traumatic Growth Inventory–Short Form)", authors: "Cann et al., 2010",                       url: "https://pubmed.ncbi.nlm.nih.gov/19582640/" },
   "اختبار-أنماط-الاستهلاك":         { scale: "AUDIT-C (Alcohol Use Disorders Identification Test)", authors: "Bush et al., 1998",                        url: "https://pubmed.ncbi.nlm.nih.gov/9738608/" },
+  "اختبار-اكتئاب-ما-بعد-الولادة":   { scale: "EPDS (Edinburgh Postnatal Depression Scale)",       authors: "Cox, Holden & Sagovsky, 1987",                url: "https://pubmed.ncbi.nlm.nih.gov/3651732/" },
 };
 
 const relatedBySlug: Record<string, string[]> = {
@@ -259,12 +268,13 @@ const relatedBySlug: Record<string, string[]> = {
   "اختبار-جودة-النوم":              ["اختبار-الأرق", "اختبار-التوتر", "اختبار-الإحتراق-الوظيفي"],
   "اختبار-النمو-بعد-الصدمة":        ["اختبار-الصدمة-النفسية", "اختبار-الاكتئاب", "اختبار-تقدير-الذات"],
   "اختبار-أنماط-الاستهلاك":         ["اختبار-التوتر", "اختبار-الإحتراق-الوظيفي", "اختبار-الاكتئاب"],
+  "اختبار-اكتئاب-ما-بعد-الولادة":   ["اختبار-الاكتئاب", "اختبار-القلق", "اختبار-تقدير-الذات"],
 };
 
 // Bump TEST_CONTENT_UPDATED when test content, scoring, or interpretation changes.
 // Used for `dateModified` + `lastReviewed` in the MedicalWebPage schema —
 // signals to Google/YMYL crawlers that content is actively maintained.
-const TEST_CONTENT_UPDATED = "2026-05-31";
+const TEST_CONTENT_UPDATED = "2026-06-05";
 
 function buildTestSchema(slug: string, meta: { title: string; description: string }) {
   const source = sourceBySlug[slug];
@@ -473,16 +483,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (slug === "اختبارات") {
     return {
       title: { absolute: "جميع الاختبارات النفسية | واعي" },
-      description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية — الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر.",
+      description: "24 اختباراً نفسياً مجانياً وسرياً بالعربية — الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر.",
       alternates: { canonical: `/اختبارات` },
       openGraph: {
         title: "جميع الاختبارات النفسية | واعي",
-        description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية.",
+        description: "24 اختباراً نفسياً مجانياً وسرياً بالعربية.",
         url: `/اختبارات`,
       },
       twitter: {
         title: "جميع الاختبارات النفسية | واعي",
-        description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية.",
+        description: "24 اختباراً نفسياً مجانياً وسرياً بالعربية.",
       },
     };
   }

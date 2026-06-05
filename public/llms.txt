@@ -2,7 +2,7 @@
 
 > Free, anonymous Arabic-language mental health self-assessment tests based on validated clinical scales. No registration. No data stored.
 
-Waaei is an Arabic mental health platform offering 23 free anonymous self-assessment tests based on internationally validated clinical scales (PHQ-9, GAD-7, ASRS-5, ISI, and more). Designed for Arabic speakers in the GCC and Egypt. All results stay in your browser — nothing is stored on any server.
+Waaei is an Arabic mental health platform offering 24 free anonymous self-assessment tests based on internationally validated clinical scales (PHQ-9, GAD-7, ASRS-5, ISI, and more). Designed for Arabic speakers in the GCC and Egypt. All results stay in your browser — nothing is stored on any server.
 
 ## Self-Assessment Tests
 
@@ -29,6 +29,7 @@ Waaei is an Arabic mental health platform offering 23 free anonymous self-assess
 - Depression + anxiety + stress (DASS-21): https://waaei.me/اختبار-الاكتئاب-والقلق-والتوتر
 - Post-traumatic growth (PTGI-SF): https://waaei.me/اختبار-النمو-بعد-الصدمة
 - Substance use (AUDIT-C): https://waaei.me/اختبار-أنماط-الاستهلاك
+- Postpartum depression (EPDS): https://waaei.me/اختبار-اكتئاب-ما-بعد-الولادة
 - All tests: https://waaei.me/اختبارات
 
 ## Articles

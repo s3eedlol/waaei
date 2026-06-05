@@ -22,6 +22,7 @@ import { bpniConfig } from "@/lib/tests/bpni";
 import { psqiConfig } from "@/lib/tests/psqi";
 import { ptgiConfig } from "@/lib/tests/ptgi";
 import { auditcConfig } from "@/lib/tests/auditc";
+import { epdsConfig } from "@/lib/tests/epds";
 import { TestConfig } from "@/lib/types";
 
 export const runtime = "edge";
@@ -52,6 +53,7 @@ const testsBySlug: Record<string, TestConfig> = {
   "اختبار-جودة-النوم": psqiConfig,
   "اختبار-النمو-بعد-الصدمة": ptgiConfig,
   "اختبار-أنماط-الاستهلاك": auditcConfig,
+  "اختبار-اكتئاب-ما-بعد-الولادة": epdsConfig,
 };
 
 async function loadCairo(): Promise<ArrayBuffer | null> {

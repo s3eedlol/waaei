@@ -46,7 +46,7 @@ export function HomeMoodSection({
             className="mt-3 text-[13px] lg:text-[17px] lg:max-w-[520px]"
             style={{ color: "var(--waaei-mute)", lineHeight: "var(--waaei-lh-body)" }}
           >
-            23 اختباراً علمياً مجانياً وسرياً تماماً — بدون تسجيل، بدون حفظ بيانات.
+            24 اختباراً علمياً مجانياً وسرياً تماماً — بدون تسجيل، بدون حفظ بيانات.
             فهم ما تشعر به هو الخطوة الأولى.
           </p>
 

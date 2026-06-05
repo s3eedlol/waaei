@@ -27,29 +27,30 @@ import { bpniConfig } from "@/lib/tests/bpni";
 import { psqiConfig } from "@/lib/tests/psqi";
 import { ptgiConfig } from "@/lib/tests/ptgi";
 import { auditcConfig } from "@/lib/tests/auditc";
+import { epdsConfig } from "@/lib/tests/epds";
 import { TestConfig } from "@/lib/types";
 
 // ── Metadata (unchanged) ──────────────────────────────────────────────────────
 export const metadata: Metadata = {
   title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
   description:
-    "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+    "24 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
   alternates: { canonical: "/" },
   openGraph: {
     title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
     description:
-      "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+      "24 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
     url: "/",
   },
   twitter: {
     title: "اختبارات الصحة النفسية بالعربية — مجانية وسرية | واعي",
     description:
-      "23 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
+      "24 اختباراً نفسياً مجانياً وسرياً بالعربية. اختبارات الاكتئاب، القلق، التوتر، الشخصية، النوم، وأكثر — مبنية على مقاييس علمية مُتحقَّق منها.",
   },
 };
 
 // ── Test groupings (unchanged) ────────────────────────────────────────────────
-const moodTests: TestConfig[]        = [phq9Config, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig];
+const moodTests: TestConfig[]        = [phq9Config, epdsConfig, mdqConfig, dass21Config, rsesConfig, beis10Config, staxiConfig, eat7Config, ptgiConfig, psqiConfig, auditcConfig];
 const anxietyTests: TestConfig[]     = [gad7Config, spinConfig, pcl5Config, ocirConfig];
 const stressTests: TestConfig[]      = [pssConfig, burnoutConfig, isiConfig, asrs5Config, sassvConfig];
 const personalityTests: TestConfig[] = [bfi10Config, ecrsConfig, uls8Config, bpniConfig];
@@ -143,7 +144,7 @@ const websiteSchema = {
   "@type": "WebSite",
   name: "واعي",
   url: "https://waaei.me",
-  description: "23 اختباراً نفسياً مجانياً وسرياً بالعربية — مبنية على مقاييس علمية مُتحقَّق منها",
+  description: "24 اختباراً نفسياً مجانياً وسرياً بالعربية — مبنية على مقاييس علمية مُتحقَّق منها",
   inLanguage: "ar",
   publisher: { "@type": "Organization", name: "واعي", url: "https://waaei.me" },
 };

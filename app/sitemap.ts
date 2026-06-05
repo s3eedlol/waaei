@@ -4,7 +4,7 @@ import { getPublishedArticles } from "@/lib/supabase/articles";
 // Update these dates when content meaningfully changes.
 // Never use new Date() here — that tells GSC every page changed on every build.
 const HOMEPAGE_UPDATED  = new Date("2026-05-22");
-const TESTS_UPDATED     = new Date("2026-05-22");
+const TESTS_UPDATED     = new Date("2026-06-05");
 const ABOUT_UPDATED     = new Date("2026-04-01");
 const PRIVACY_UPDATED   = new Date("2026-05-22");
 const ARTICLES_UPDATED  = new Date("2026-05-30");
@@ -36,6 +36,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "اختبار-جودة-النوم",
     "اختبار-النمو-بعد-الصدمة",
     "اختبار-أنماط-الاستهلاك",
+    "اختبار-اكتئاب-ما-بعد-الولادة",
   ];
 
   const publishedArticles = await getPublishedArticles();

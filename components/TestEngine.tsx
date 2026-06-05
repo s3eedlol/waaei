@@ -281,7 +281,7 @@ export function TestEngine({ config, compact = false, relatedTests }: { config: 
             gap: 10,
           }}
         >
-          {config.answerOptions.map((option) => {
+          {(question.options ?? config.answerOptions).map((option) => {
             const sel = selected === option.value;
             return (
               <button

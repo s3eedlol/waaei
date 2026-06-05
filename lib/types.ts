@@ -2,6 +2,7 @@ export interface Question {
   id: number;
   text: string;
   reversed?: boolean; // for PSS items that score inversely
+  options?: AnswerOption[]; // per-question options (e.g. EPDS — each item has its own response phrases); falls back to TestConfig.answerOptions
 }
 
 export interface AnswerOption {
