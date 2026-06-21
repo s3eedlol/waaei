@@ -59,6 +59,7 @@ async function _getArticleBySlug(slug: string): Promise<Article | null> {
       .from("articles")
       .select("*")
       .eq("slug", slug)
+      .eq("status", "published")
       .single();
     if (error) return null;
     return rowToArticle(data);

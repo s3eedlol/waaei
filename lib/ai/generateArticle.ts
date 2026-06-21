@@ -171,9 +171,13 @@ export async function generateAndSaveArticle(
   const reading_minutes = Math.max(3, Math.ceil(wordCount / 200));
 
   const introMatch = content.match(/^([^\n#][^\n]{80,})/m);
-  const meta_description = introMatch
-    ? introMatch[1].slice(0, 155)
-    : topic.title;
+  const rawIntro = introMatch ? introMatch[1] : topic.title;
+  const decodedIntro = rawIntro
+    .replace(/&quot;/g, '"').replace(/&amp;/g, "&")
+    .replace(/&#39;|&apos;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  const meta_description = decodedIntro.length <= 155
+    ? decodedIntro
+    : decodedIntro.slice(0, 155).replace(/\s+\S*$/, "").trim();
 
   const id = await saveArticle({
     slug: topic.slug,

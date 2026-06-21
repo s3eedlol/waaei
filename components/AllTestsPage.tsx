@@ -54,9 +54,26 @@ const sections: Section[] = [
 
 const totalTests = sections.reduce((n, s) => n + s.tests.length, 0);
 
+const itemListSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "جميع الاختبارات النفسية على واعي",
+  numberOfItems: totalTests,
+  itemListElement: sections.flatMap((s) => s.tests).map((t, i) => ({
+    "@type": "ListItem",
+    position: i + 1,
+    name: t.name,
+    url: `https://waaei.me/${t.slug}`,
+  })),
+};
+
 export function AllTestsPage() {
   return (
     <div style={{ minHeight: "100svh", background: "var(--waaei-bg)", display: "flex", flexDirection: "column" }}>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       <Header />
 
       <main className="flex-1 mx-auto w-full px-[22px] py-[32px] pb-[64px] lg:px-[56px] lg:py-[48px] lg:pb-[80px]" style={{ maxWidth: 1280 }}>

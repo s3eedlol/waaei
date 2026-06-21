@@ -2,22 +2,6 @@ import Link from "next/link";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 
-const schema = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Emdash",
-  legalName: "Emdash",
-  url: "https://emdash.ae",
-  email: "contact@emdash.ae",
-  sameAs: ["https://waaei.me"],
-  subOrganization: {
-    "@type": "Organization",
-    name: "واعي",
-    url: "https://waaei.me",
-    description: "اختبارات نفسية مجانية باللغة العربية.",
-  },
-};
-
 const sections = [
   {
     emoji: "🎯",
@@ -44,10 +28,6 @@ const sections = [
 export function AboutPage() {
   return (
     <div style={{ minHeight: "100svh", background: "var(--waaei-bg)", display: "flex", flexDirection: "column" }}>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
-      />
       <Header />
 
       <main

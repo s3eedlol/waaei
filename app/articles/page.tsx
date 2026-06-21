@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { getPublishedArticles } from "@/lib/supabase/articles";
 
 export const metadata: Metadata = {
-  title: "مقالات الصحة النفسية | واعي",
+  title: "مقالات الصحة النفسية",
   description: "مقالات تعليمية مبنية على مصادر علمية للتعرف على الحالات النفسية الشائعة وأعراضها",
   alternates: { canonical: "/مقالات" },
   openGraph: {
@@ -29,8 +29,25 @@ const CATEGORY_COLOR: Record<string, string> = {
 export default async function ArticlesHubPage() {
   const articles = await getPublishedArticles();
 
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "مقالات الصحة النفسية على واعي",
+    numberOfItems: articles.length,
+    itemListElement: articles.map((a, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: a.title,
+      url: `https://waaei.me/مقالات/${a.slug}`,
+    })),
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+      />
       <Header />
       <main className="flex-1">
         <div
