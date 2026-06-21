@@ -3,7 +3,7 @@ import { TestConfig } from "../types";
 export const bfi10Config: TestConfig = {
   id: "bfi10",
   slug: "اختبار-الشخصية-الخمسة",
-  name: "اختبار الشخصية الكبرى",
+  name: "اختبار الشخصية الخمسة الكبرى",
   conditionName: "نموذج الشخصية الخمسة الكبرى",
   shortDescription: "اكتشف أبعاد شخصيتك الخمسة الأساسية وفق أعلى معايير علم النفس",
   longDescription:
