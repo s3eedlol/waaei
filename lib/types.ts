@@ -37,4 +37,8 @@ export interface TestConfig {
   conditionDescription?: string;
   affiliateUrl?: string;
   affiliateCta?: string;
+  // Per-test answer-first Q&A appended to the FAQ section. String answers only
+  // (so they flow into both the crawlable <details> DOM and the FAQPage JSON-LD).
+  // Used to target winnable long-tail/variant queries + AIO citation. See app/[test]/page.tsx.
+  extraFaqs?: { q: string; a: string }[];
 }

@@ -379,6 +379,9 @@ function buildFAQItems(config: TestConfig): { q: string; a: React.ReactNode }[] 
       ? [{ q: `ما هو ${config.conditionName ?? config.name}؟`, a: config.conditionDescription }]
       : []),
     { q: `ما الذي يقيسه ${config.name}؟`, a: config.longDescription },
+    // Per-test answer-first Q&A (variant/long-tail + AIO targets) — placed high,
+    // after the topical items but before the procedural boilerplate.
+    ...(config.extraFaqs ?? []),
     {
       q: `كم يستغرق ${config.name}؟`,
       a: `يستغرق الاختبار ${config.estimatedMinutes} دقائق تقريباً ويتضمن ${config.questions.length} سؤالاً.`,
