@@ -208,6 +208,13 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 
 ## SEO status
 
+### Shipped (2026-06-30) — answer-first content depth on 6 buried pages (impression-growth play)
+**Why:** GSC recon showed low impressions = tiny ranking surface (only ~41 queries / 15 pages surface in 90d) + every high-volume head buried p75–94 (`اختبار الاكتئاب` pulls 46 imp even at p90). Fix = deepen the buried-but-winnable pages so they rank for more long-tail/variant queries (works on already-trusted pages, faster than moving the gated head).
+- New reusable field **`TestConfig.extraFaqs?: { q: string; a: string }[]`** (`lib/types.ts`). Appended in `buildFAQItems` (`app/[test]/page.tsx`) right after the topical items, before the procedural boilerplate. **String answers flow into BOTH the crawlable `<details>` DOM and the FAQPage JSON-LD automatically** — `buildFAQSchema` already filters to string answers, so no schema change was needed. No new render code; existing FAQ `<details>` loop renders them.
+- Populated on the 6 buried-but-winnable pages from the keyword audit (+ deeper `longDescription` on phq9): **phq9 (depression)** — variant capture من-100 (KD0) / المبتسم (KD6) / هل أنا مكتئب / مجاني (KD7) + a suicidal-ideation safety FAQ (**generic guidance, no hotline numbers** — operator said "no need per country right now"; verified per-country lines already sit in the crisis-banner TODO below for when we build it); **beis10 (EI)** (EQ-vs-IQ + تقييم/استبيان synonyms); **ocir (OCD)** (habits-vs-OCD, types, **religious scrupulosity وسواس الطهارة/الديني**, treatability); **rses (self-esteem)**, **uls8 (loneliness)**, **burnout** (vs-depression cross-link + WHO/ICD-11 recognition).
+- ⚠️ **burnout** uses `الإحتراق` in slug/title but the new FAQ *answers* use the correct search-term spelling `الاحتراق` (so the page now surfaces for it); renaming the slug/title is deferred (`name` blast-radius across cards/ItemList/FAQ).
+- New test `__tests__/extra-faqs.test.ts` — content integrity (question ends in ؟, answer ≥60 chars, no HTML-entity/placeholder artifacts, unique per page, all 6 enriched present). **49 jest + tsc + prod `next build` green; served-HTML verified all 6 (markers + FAQPage JSON-LD).** Commit `75a1536` → `master`, prod-verified, IndexNow 6 URLs HTTP 200. ▶ re-check GSC ~2026-07-21 for variant impression gains.
+
 ### Fixed (2026-06-03)
 - **Duplicated brand suffix in 2 titles.** The ADHD (`اختبار-ADHD-للبالغين`) and phone-addiction (`اختبار-إدمان-الهاتف`) `metaBySlug` titles hardcoded `| واعي`, which `layout.tsx`'s `title.template` ("%s | واعي") then doubled → `… | واعي | واعي`. Removed the hardcoded suffix from both; template now appends the brand once. See the "Title brand-suffix gotcha" note in the SEO architecture section. (commit b87985f)
 - Cleared standing lint errors in the same commit: review logout link `<a>`→`<Link prefetch={false}>`, about-page privacy link `<a>`→`<Link>`, dropped unused `insertAt`/`secondHeading` in `generateArticle.ts`. Only remaining lint error is the intentional `setState` in `TestEngine.tsx`'s shared-`?score=` effect.
@@ -227,11 +234,16 @@ Cron at 2am UTC → Claude writes article → saved as draft (invisible). Operat
 - `llms.txt` — `public/llms.txt` lists all 23 tests with scale names + direct URLs for ChatGPT/Perplexity/Claude citation (commit 47f204e)
 
 ### Remaining
-- Expand `conditionDescription` for 18 non-top-5 tests (priority: burnout, stress, OCD, social phobia, loneliness)
-- Approve blog drafts at `/review` daily — priority topics: depression, anxiety, ADHD, phone addiction articles
-- Monitor GSC ~2026-06-14 for CTR movement + People Also Ask appearances
-- Mental Health Resources Directory — therapist/crisis lines by country (UAE, Saudi, Egypt) — highest E-E-A-T + backlink value
-- Backlinks — 0 currently, deferred
+- **AIO answer-first blocks** on the 5 AIO test pages (sleep-quality / Big-Five / phone-addiction / post-trauma-growth / alcohol) — use the same `extraFaqs` mechanism; none overlap the 6 deepened 06-30.
+- **CE-1** — lift the 26-topic static cap in `lib/ai/generateArticle.ts` (append keyword-grounded topics or a feed) so the daily cron doesn't re-stall on exhaustion.
+- **burnout slug/title spelling** `الإحتراق`→`الاحتراق` (the real search term; answers already use it — title/slug rename is a display-blast-radius decision).
+- **Bilingual scale-acronym capture** on the still-bare tests (SAS-SV / PSS-10 / RSES — Latin acronym ±hyphen + "arabic" in title/H1/FAQ).
+- `extraFaqs` depth on the remaining tests as needed (the 6 buried-but-winnable ones done 06-30; the top-5 already had rich `conditionDescription`).
+- **YMYL E-E-A-T** — named reviewer/editorial entity (needs a real person) + the self-harm crisis banner (see TODO below — verified numbers ready).
+- Approve blog drafts at `/review` daily.
+- Monitor GSC ~2026-07-21 for variant/long-tail impression gains + People Also Ask; watch rank tracker `9928399`.
+- Mental Health Resources Directory — therapist/crisis lines by country (UAE, Saudi, Egypt) — highest E-E-A-T + backlink value.
+- Backlinks — 0 currently, deferred.
 
 ### TODO — self-harm crisis banner (recommended, NOT yet built) — review next session
 **Context:** When EPDS was added (2026-06-05), a per-item crisis banner was prototyped then **reverted** at the operator's request to review later. EPDS item 10 and PHQ-9 item 9 both screen for thoughts of self-harm; right now that risk is only covered by safety wording inside the results recommendations + disclaimer (no dedicated, always-visible crisis surface). This is the highest-value safety enhancement for those two tests and pairs naturally with the **Mental Health Resources Directory** roadmap item above.
